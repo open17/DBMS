@@ -15,13 +15,13 @@
 
 <script>
 // @ is an alias to /src
-import CarouselSection from '@/components/CarouselSection.vue'
-import HeroSection from '@/components/HeroSection.vue'
-import ProductCardVue from '@/components/ProductCard.vue'
-import FeatureSectionVue from '@/components/FeatureSection.vue'
-import PromoSectionVue from '@/components/PromoSection.vue'
-import TestimonialsSectionVue from '@/components/TestimonialsSection.vue'
-import SerectMailVue from '@/components/SerectMail.vue'
+import CarouselSection from '@/components/HeroComponents/CarouselSection.vue'
+import HeroSection from '@/components/HeroComponents/HeroSection.vue'
+import ProductCardVue from '@/components/HeroComponents/ProductCard.vue'
+import FeatureSectionVue from '@/components/HeroComponents/FeatureSection.vue'
+import PromoSectionVue from '@/components/HeroComponents/PromoSection.vue'
+import TestimonialsSectionVue from '@/components/HeroComponents/TestimonialsSection.vue'
+import SerectMailVue from '@/components/HeroComponents/SerectMail.vue'
 
 
 export default {

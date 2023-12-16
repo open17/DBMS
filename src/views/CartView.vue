@@ -1,93 +1,39 @@
 <template>
   <div class="overflow-x-auto w-full min-h-screen">
-  <table class="table w-full">
-    <!-- head -->
-    <thead>
-      <tr>
-        <th>
-          <label class="align-middle">
-            <input type="checkbox" class="checkbox" />
-            <p>select All</p>
-          </label>
-        </th>
-        <th>Name</th>
-        <th>Category</th>
-        <th>Price</th>  
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- row 1 -->
-      <tr>
-        <th>
-          <label>
-            <input type="checkbox" class="checkbox" />
-          </label>
-        </th>
-        <td>
-          <div class="flex items-center space-x-3">
-            <div class="avatar">
-              <div class="mask mask-squircle w-12 h-12">
-                <img src="https://cdn.jsdelivr.net/gh/open17/Pic/img/202311230254921.svg" alt="Avatar Tailwind CSS Component" />
-              </div>
-            </div>
-            <div>
-              <div class="font-bold">iPhone 19</div>
-              <div class="text-sm opacity-50">Hot</div>
-            </div>
-          </div>
-        </td>
-        <td>
-          Phone
-          <br/>
-          <span class="badge badge-ghost badge-sm">Flagship phone</span>
-        </td>
-        <td>$999</td>
-        <th>
-          <button class="btn btn-ghost btn-xs">details</button>
-        </th>
-      </tr>
-      <!-- row 2 -->
-      <tr>
-        <th>
-          <label>
-            <input type="checkbox" class="checkbox" />
-          </label>
-        </th>
-        <td>
-          <div class="flex items-center space-x-3">
-            <div class="avatar">
-              <div class="mask mask-squircle w-12 h-12">
-                <img src="https://cdn.jsdelivr.net/gh/open17/Pic/img/202311230254921.svg" alt="Avatar Tailwind CSS Component" />
-              </div>
-            </div>
-            <div>
-              <div class="font-bold">HUAWEI</div>
-              <div class="text-sm opacity-50">HOT</div>
-            </div>
-          </div>
-        </td>
-        <td>
-          Phone
-          <br/>
-          <span class="badge badge-ghost badge-sm">Flagship phone</span>
-        </td>
-        <td>$999</td>
-        <th>
-          <button class="btn btn-ghost btn-xs">details</button>
-        </th>
-      </tr>
-    </tbody>    
-  </table>
-</div>
+    <BreadCrumbsVue class="h-52" />
+    <cart-table-vue class="bg-base-100" />
+    <div class="stats shadow">
+      <div class="stat">
+        <div class="stat-title">Downloads</div>
+        <div class="stat-value">31K</div>
+        <div class="stat-desc">Jan 1st - Feb 1st</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-title">New Users</div>
+        <div class="stat-value">4,200</div>
+        <div class="stat-desc">↗︎ 400 (22%)</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-title">New Registers</div>
+        <div class="stat-value">1,200</div>
+        <div class="stat-desc">↘︎ 90 (14%)</div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
+import CartTableVue from "@/components/CartComponents/CartTable.vue";
+import BreadCrumbsVue from "@/components/UnitComponents/BreadCrumbs.vue";
 export default {
-
-}
+  components: {
+    CartTableVue,
+    BreadCrumbsVue,
+  },
+};
 </script>
 
 <style>
-
 </style>

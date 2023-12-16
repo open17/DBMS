@@ -1,18 +1,38 @@
 <template>
   <div class="navbar bg-base-100 z-50 justify-between">
     <div class="flex">
-      <img src="../assets/favicon.png" alt="" class="w-10 h-10">
+      <img src="@/assets/favicon.png" alt="" class="w-10 h-10" />
       <a class="btn btn-ghost normal-case text-xl">ZapZone</a>
     </div>
     <div class="flex-none gap-2">
       <ul class="menu menu-horizontal px-1">
-        <li v-for="(value, key) in navData" :key="key">
-          <router-link :to="value">
-            {{ key }}
-          </router-link>
+        <li>
+          <router-link to="/" class="mr-2">Home</router-link>
+        </li>
+        <li>
+          <details>
+            <summary>Shop</summary>
+            <ul class="p-2 bg-base-100 rounded-t-none z-30">
+              <li v-for="(value, key) in navData" :key="key" class="mr-2">
+                <router-link :to="value">
+                  {{ key }}
+                </router-link>
+              </li>
+            </ul>
+          </details>
+        </li>
+        <li>
+          <details>
+            <summary>More</summary>
+            <ul class="p-2 bg-base-100 rounded-t-none z-30">
+              <li><a>Contact</a></li>
+              <li><a>Blog</a></li>
+              <li><a>Github</a></li>
+            </ul>
+          </details>
         </li>
       </ul>
-      <ThemeSelectorVue/>
+      <ThemeSelectorVue />
       <div class="dropdown dropdown-end z-10">
         <label tabindex="0" class="btn btn-ghost btn-circle">
           <div class="indicator">
@@ -41,7 +61,12 @@
             <span class="font-bold text-lg">2 Items</span>
             <span class="">Subtotal: $1998</span>
             <div class="card-actions">
-              <button class="btn btn-primary btn-block" @click="$router.push('/cart');">View cart</button>
+              <button
+                class="btn btn-primary btn-block"
+                @click="$router.push('/cart')"
+              >
+                View cart
+              </button>
             </div>
           </div>
         </div>
@@ -66,6 +91,7 @@
           </li>
           <li><a href="/login.html">Sign Up</a></li>
           <li><a href="/register.html">Login</a></li>
+          <li><router-link to="/setting">Setting</router-link></li>
         </ul>
       </div>
     </div>
@@ -73,17 +99,19 @@
 </template>
 
 <script>
-import ThemeSelectorVue from './ThemeSelector.vue';
+import ThemeSelectorVue from "./ThemeSelector.vue";
 export default {
-  components:{
-    ThemeSelectorVue
+  components: {
+    ThemeSelectorVue,
   },
   data() {
     return {
       navData: {
-        Home: "/",
-        New: "/new",
-        Goods: "/goods",
+        All: "/goods?category=All",
+        Phone: "/goods?category=Phone",
+        Computer: "/goods?category=Computer",
+        Audiovisual: "/goods?category=Audiovisual",
+        Others: "/goods?category=Others",
       },
     };
   },

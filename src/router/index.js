@@ -8,24 +8,47 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    component: HomeView
+    component: HomeView,
+    meta: {
+        breadcrumb: 'Home'
+      }
   },
   {
-    path: '/new',
-    name: 'new',
+    path: '/detail',
+    name: 'detail',
+    meta: {
+        breadcrumb: 'Goods detail'
+    },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/NewView.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/DetailView.vue')
+  },
+  {
+    path: '/review',
+    name: 'review',
+    meta: {
+        breadcrumb: 'Reviews'
+      },
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/ReviewView.vue')
   },
   {
     path: '/goods',
     name: 'goods',
+    meta: {
+        breadcrumb: 'Goods'
+      },
     component: () => import(/* webpackChunkName: "about" */ '../views/GoodsView.vue')
   },
   {
     path: '/cart',
     name: 'cart',
+    meta: {
+        breadcrumb: 'Cart'
+      },
     component: () => import(/* webpackChunkName: "about" */ '../views/CartView.vue')
   },
 ]

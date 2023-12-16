@@ -82,7 +82,7 @@ export default {
               ]
             },
             {
-              title:'More',
+              title:'Others',
               img:'https://cdn.jsdelivr.net/gh/open17/Pic/img/202312031438741.png',
               links:[
                 {

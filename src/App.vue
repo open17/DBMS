@@ -7,7 +7,7 @@
 </template>
 <script>
 import FooterVue from './components/FooterSection.vue'
-import TopBarVue from './components/TopBar.vue'
+import TopBarVue from './components/TopbarComponents/TopBar.vue'
 import './style.css'
 export default {
   components:{

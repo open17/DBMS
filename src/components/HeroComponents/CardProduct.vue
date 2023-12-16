@@ -16,7 +16,7 @@
           <li v-for="(i,idx) in links" :key="idx" class="px-0"><a :href="i.link" class="text-sm mx-0">{{i.title}}</a></li>
         </ul>
         <div class="card-actions justify-center">
-          <button class="btn btn-outline btn-xs sm:btn-sm md:btn-md">
+          <button class="btn btn-outline btn-xs sm:btn-sm md:btn-md" @click="$router.push('goods?category='+title)">
             Shop All
           </button>
         </div>
