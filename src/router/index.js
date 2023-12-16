@@ -51,6 +51,22 @@ const routes = [
       },
     component: () => import(/* webpackChunkName: "about" */ '../views/CartView.vue')
   },
+    {
+    path: '/checkout',
+    name: 'checkout',
+    meta: {
+        breadcrumb: 'Checkout'
+      },
+    component: () => import(/* webpackChunkName: "about" */ '../views/CheckoutView.vue')
+  },
+  {
+    path: '/address',
+    name: 'address',
+    meta: {
+        breadcrumb: 'Address'
+      },
+    component: () => import(/* webpackChunkName: "about" */ '../views/AddressView.vue')
+  },
 ]
 
 const router = new VueRouter({

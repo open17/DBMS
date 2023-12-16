@@ -18,7 +18,7 @@
               />
             </div>
             <div class="sm:col-span-8 lg:col-span-7">
-              <h2 class="text-2xl font-bold text-gray-900 sm:pr-12">
+              <h2 class="text-2xl font-bold text-base-content sm:pr-12">
                 {{ product.name }}
               </h2>
               <section aria-labelledby="information-heading" class="mt-2">
@@ -26,16 +26,16 @@
                   Product information
                 </h3>
 
-                <p class="text-2xl text-gray-900">{{ product.price }}</p>
+                <p class="text-2xl text-base-content">{{ product.price }}</p>
 
                 <!-- Reviews -->
                 <div class="mt-6">
                   <h4 class="sr-only">Reviews</h4>
                   <div class="flex items-center">
                     <div class="flex items-center">
-                      <!-- Active: "text-gray-900", Default: "text-gray-200" -->
+                      <!-- Active: "text-base-content", Default: "text-gray-200" -->
                       <svg
-                        class="text-gray-900 h-5 w-5 flex-shrink-0"
+                        class="text-base-content h-5 w-5 flex-shrink-0"
                         viewBox="0 0 20 20"
                         fill="currentColor"
                         aria-hidden="true"
@@ -47,7 +47,7 @@
                         />
                       </svg>
                       <svg
-                        class="text-gray-900 h-5 w-5 flex-shrink-0"
+                        class="text-base-content h-5 w-5 flex-shrink-0"
                         viewBox="0 0 20 20"
                         fill="currentColor"
                         aria-hidden="true"
@@ -59,7 +59,7 @@
                         />
                       </svg>
                       <svg
-                        class="text-gray-900 h-5 w-5 flex-shrink-0"
+                        class="text-base-content h-5 w-5 flex-shrink-0"
                         viewBox="0 0 20 20"
                         fill="currentColor"
                         aria-hidden="true"
@@ -71,7 +71,7 @@
                         />
                       </svg>
                       <svg
-                        class="text-gray-900 h-5 w-5 flex-shrink-0"
+                        class="text-base-content h-5 w-5 flex-shrink-0"
                         viewBox="0 0 20 20"
                         fill="currentColor"
                         aria-hidden="true"
@@ -98,7 +98,7 @@
                     <p class="sr-only">3.9 out of 5 stars</p>
                     <router-link
                       :to="getReviewLink()"
-                      class="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500"
+                      class="ml-3 text-sm font-medium text-primary hover:text-primary"
                       >117 reviews</router-link
                     >
                   </div>
@@ -112,12 +112,12 @@
                   <!-- Sizes -->
                   <div class="mt-10">
                     <div class="flex items-center justify-between">
-                      <h4 class="text-sm font-medium text-gray-900">
+                      <h4 class="text-sm font-medium text-base-content">
                         {{ product.detail }}
                       </h4>
                       <a
                         href="#"
-                        class="text-sm font-medium text-indigo-600 hover:text-indigo-500"
+                        class="text-sm font-medium text-primary hover:text-primary"
                         >Help guide</a
                       >
                     </div>
@@ -126,9 +126,12 @@
                       <legend class="sr-only">Choose</legend>
                       <div class="grid grid-cols-4 gap-4">
                         <label
-                          class="group relative flex items-center justify-center rounded-md border py-3 px-4 text-sm font-medium uppercase hover:bg-gray-50 focus:outline-none sm:flex-1 cursor-pointer bg-white text-gray-900 shadow-sm"
+                          class="group relative flex items-center justify-center rounded-md border py-3 px-4 text-sm font-medium uppercase hover:bg-gray-50 focus:outline-none sm:flex-1 cursor-pointer bg-base-100 text-base-content shadow-sm"
                           v-for="i in product.type"
                           :key="i"
+                          :class="{
+                            'border-2 text-primary': selectedType == i,
+                          }"
                         >
                           <input
                             type="radio"
@@ -136,50 +139,14 @@
                             :value="i"
                             class="sr-only"
                             aria-labelledby="type-choice-0-label"
+                            v-model="selectedType"
                           />
                           <span :id="i">{{ i }}</span>
-                          <!--
-                            Active: "border", Not Active: "border-2"
-                            Checked: "border-indigo-500", Not Checked: "border-transparent"
-                          -->
+                          <!-- Active: "border", Not Active: "border-2" -->
                           <span
                             class="pointer-events-none absolute -inset-px rounded-md"
                             aria-hidden="true"
                           ></span>
-                        </label>
-                        <label
-                          class="group relative flex items-center justify-center rounded-md border py-3 px-4 text-sm font-medium uppercase hover:bg-gray-50 focus:outline-none sm:flex-1 cursor-not-allowed bg-gray-50 text-gray-200"
-                          v-for="(i, idx) in product.forbid"
-                          :key="idx"
-                        >
-                          <input
-                            type="radio"
-                            name="type-choice"
-                            :value="i"
-                            disabled
-                            class="sr-only"
-                            aria-labelledby="type-choice-7-label"
-                          />
-                          <span :id="i">{{ i }}</span>
-                          <span
-                            aria-hidden="true"
-                            class="pointer-events-none absolute -inset-px rounded-md border-2 border-gray-200"
-                          >
-                            <svg
-                              class="absolute inset-0 h-full w-full stroke-2 text-gray-200"
-                              viewBox="0 0 100 100"
-                              preserveAspectRatio="none"
-                              stroke="currentColor"
-                            >
-                              <line
-                                x1="0"
-                                y1="100"
-                                x2="100"
-                                y2="0"
-                                vector-effect="non-scaling-stroke"
-                              />
-                            </svg>
-                          </span>
                         </label>
                       </div>
                     </fieldset>
@@ -187,7 +154,7 @@
 
                   <button
                     type="submit"
-                    class="mt-6 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    class="mt-6 flex w-full items-center justify-center rounded-md border border-transparent bg-primary px-8 py-3 text-base font-medium text-white hover:bg-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
                   >
                     Add to cart
                   </button>
@@ -203,17 +170,18 @@
 
 <script>
 export default {
-  props: ["product","gid"],
+  props: ["product", "gid"],
   data() {
     return {
       isShow: true,
+      selectedType: "",
     };
   },
-  methods:{
-    getReviewLink(){
-      return `review?gid=${this.gid}`
-    }
-  }
+  methods: {
+    getReviewLink() {
+      return `review?gid=${this.gid}`;
+    },
+  },
 };
 </script>
 

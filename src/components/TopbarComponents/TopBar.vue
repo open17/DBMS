@@ -91,7 +91,7 @@
           </li>
           <li><a href="/login.html">Sign Up</a></li>
           <li><a href="/register.html">Login</a></li>
-          <li><router-link to="/setting">Setting</router-link></li>
+          <li><router-link to="/address">Address</router-link></li>
         </ul>
       </div>
     </div>

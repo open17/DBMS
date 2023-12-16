@@ -1,89 +1,85 @@
 <template>
-  <div class="mx-10 mt-5">
-  <table class="table">
-    <!-- head -->
-    <thead>
-      <tr>
-        <th>
-          <label class="align-middle">
-            <input type="checkbox" class="checkbox" />
-          </label>
-        </th>
-        <th>Name</th>
-        <th>Category</th>
-        <th>Price</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- row 1 -->
-      <tr>
-        <th>
-          <label>
-            <input type="checkbox" class="checkbox" />
-          </label>
-        </th>
-        <td>
-          <div class="flex items-center space-x-3">
-            <div class="avatar">
-              <div class="mask mask-squircle w-12 h-12">
-                <img
-                  src="https://cdn.jsdelivr.net/gh/open17/Pic/img/202311230254921.svg"
-                  alt="Avatar Tailwind CSS Component"
-                />
-              </div>
-            </div>
-            <div>
-              <div class="font-bold">iPhone 19</div>
-            </div>
-          </div>
-        </td>
-        <td>
-          Phone
-        </td>
-        <td>$999</td>
-        <th>
-          <button class="btn btn-ghost btn-xs">details</button>
-        </th>
-      </tr>
-      <!-- row 2 -->
-      <tr>
-        <th>
-          <label>
-            <input type="checkbox" class="checkbox" />
-          </label>
-        </th>
-        <td>
-          <div class="flex items-center space-x-3">
-            <div class="avatar">
-              <div class="mask mask-squircle w-12 h-12">
-                <img
-                  src="https://cdn.jsdelivr.net/gh/open17/Pic/img/202311230254921.svg"
-                  alt="Avatar Tailwind CSS Component"
-                />
-              </div>
-            </div>
-            <div>
-              <div class="font-bold">HUAWEI</div>
-            </div>
-          </div>
-        </td>
-        <td>
-          Phone
-        </td>
-        <td>$999</td>
-        <th>
-          <button class="btn btn-ghost btn-xs">details</button>
-        </th>
-      </tr>
-    </tbody>
-  </table>
+  <div>
+    <el-table
+      :data="
+        tableData.filter(
+          (data) =>
+            !search || data.name.toLowerCase().includes(search.toLowerCase())
+        )
+      "
+      ref="multipleTable"
+      tooltip-effect="dark"
+      size="medium"
+      style="width: 100%"
+       @selection-change="handleSelectionChange"
+    >
+      <el-table-column type="selection" width="55"> </el-table-column>
+      <el-table-column label="Name" prop="name"> </el-table-column>
+      <el-table-column label="Category" prop="category"> </el-table-column>
+      <el-table-column label="Price" prop="price"> </el-table-column>
+      <el-table-column align="right">
+        <template slot="header" slot-scope="scope">
+          <el-input
+            v-model="search"
+            size="large"
+            placeholder="Search"
+            :class="scope"
+          />
+        </template>
+        <template slot-scope="scope">
+          <el-button size="mini" @click="handleDetail(scope.$index, scope.row)"
+            >Detail</el-button
+          >
+          <el-button
+            size="mini"
+            type="danger"
+            @click="handleDelete(scope.$index, scope.row)"
+            >Delete</el-button
+          >
+        </template>
+      </el-table-column>
+    </el-table>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      tableData: [
+        {
+          name: "Product 1",
+          category: "Category 1",
+          price: "$100",
+        },
+        {
+          name: "Product 2",
+          category: "Category 2",
+          price: "$2000",
+        },
+        {
+          name: "Product 3",
+          category: "Category 1",
+          price: "$230",
+        },
+      ],
+      search: "",
+      selectNum: 0,
+      selection: [],
+    };
+  },
+  methods: {
+    handleDetail(index, row) {
+      console.log(index, row);
+    },
+    handleDelete(index, row) {
+      console.log(index, row);
+    },
+    // 监控多选框事件
+    handleSelectionChange(selection) {
+      this.selectNum = selection.length;
+      this.selection = selection;
+    },
+  },
+};
 </script>
-
-<style>
-</style>
