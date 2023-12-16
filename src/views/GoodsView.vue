@@ -1,7 +1,11 @@
 <template>
-  <div class="w-full min-h-screen flex bg-base-200 flex-col">
-    <BreadCrumbsVue class=" h-52"/>
+  <div class="w-full min-h-screen flex bg-base-200 flex-col justify-center">
+    <BreadCrumbsVue class="h-52" />
     <SearchBoxVue />
+    <div class="flex justify-center w-full">
+      <el-pagination background layout="prev, pager, next" :total="1000"  :hide-on-single-page='true'>
+      </el-pagination>
+    </div>
     <ElementGroupVue :items="responseData" />
   </div>
 </template>
@@ -10,12 +14,12 @@
 import SearchBoxVue from "@/components/GoodsComponents/SearchBox.vue";
 import ElementGroupVue from "@/components/GoodsComponents/ElementGroup.vue";
 import http from "@/http.js";
-import BreadCrumbsVue from '@/components/UnitComponents/BreadCrumbs.vue';
+import BreadCrumbsVue from "@/components/UnitComponents/BreadCrumbs.vue";
 export default {
   components: {
     ElementGroupVue,
     SearchBoxVue,
-    BreadCrumbsVue
+    BreadCrumbsVue,
   },
   data() {
     return {
