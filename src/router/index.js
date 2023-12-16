@@ -67,6 +67,14 @@ const routes = [
       },
     component: () => import(/* webpackChunkName: "about" */ '../views/AddressView.vue')
   },
+  {
+    path: '/order',
+    name: 'order',
+    meta: {
+        breadcrumb: 'order'
+      },
+    component: () => import(/* webpackChunkName: "about" */ '../views/OrderView.vue')
+  },
 ]
 
 const router = new VueRouter({

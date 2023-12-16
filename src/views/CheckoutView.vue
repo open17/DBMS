@@ -12,7 +12,7 @@
       <button class="btn btn-primary mr-5" @click="$router.push('cart')">
         Back to cart
       </button>
-      <button class="btn btn-secondary" @click="$router.push('checkout')">
+      <button class="btn btn-secondary" @click="$router.push('order')">
         Place an order
       </button>
     </div>
