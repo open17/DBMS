@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const http = axios.create({
-  baseURL: 'http://localhost:3000/backend/', // 设置基本URL
+  baseURL: 'http://localhost/api/', // 设置基本URL
   timeout: 5000 // 设置请求超时时间
 });
 

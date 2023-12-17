@@ -25,7 +25,7 @@ export default {
     return {
       category: "All",
       keyword: "",
-      responseData: null,
+      responseData: [],
       query: null,
     };
   },
@@ -35,10 +35,11 @@ export default {
         this.category = this.$route.query.category;
       if (this.$route.query.keyword) this.keyword = this.$route.query.keyword;
       http
-        .get("goods.php?category=" + this.category + "&keyword=" + this.keyword)
+        .get("db_goods.php?category=" + this.category + "&keyword=" + this.keyword)
         .then((response) => {
           // 响应成功
           this.responseData = response.data;
+          console.log(this.responseData);
         })
         .catch((error) => {
           // 响应出错

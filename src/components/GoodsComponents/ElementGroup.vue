@@ -2,13 +2,12 @@
   <div class="flex gap-4 my-5 mx-4 flex-wrap justify-start">
     <a v-for="(item, index) in items" :key="index" :href="getLink(item.gid)" >
       <CardGoodsVue
-        :title="item.title"
+        :title="item.name"
         :badge="item.badge"
         :description="item.description"
         :tags="item.tags"
-        :img="item.img"
-        :price="item.price"
-        :rating="item.rating"
+        :img="decodeImg(item.image)"
+        :rating="getRating(item.rating)"
       />
     </a>
   </div>
@@ -25,6 +24,13 @@ export default {
   methods:{
     getLink(gid){
       return "detail?gid="+gid;
+    },
+    getRating(rating){
+      if(rating)return rating;
+      return 5;
+    },
+    decodeImg(image){
+      return `data:image/jpeg;base64,${image}`
     }
   },
   data() {
