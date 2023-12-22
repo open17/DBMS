@@ -1,24 +1,18 @@
-# shopping
+# DBMS Project 23F 
+>数据库期末大作业
 
-## Project setup
-```
-npm install
-```
+## 数据库设计
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+### ER图设计
 
-### Compiles and minifies for production
-```
-npm run build
-```
 
-### Lints and fixes files
-```
-npm run lint
-```
+## 文件组成
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## 需求与文档
+见 `require/README.md`
+
+
+
+
+
+
