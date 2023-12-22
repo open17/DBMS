@@ -2,7 +2,7 @@
 >数据库期末大作业
 
 ## 数据库设计
-<img src="Design/ER.png" style="background-color:#fff;"/>
+<img src="design/ER.png" style="background-color:#fff;"/>
 
 ### ER图设计
 
