@@ -31,7 +31,7 @@
 - goods=(***goods_id***,goods_name,goods_inventory,goods_description,goods_pic,goods_information_pic)
 - type=(***type_id***,***goods_id***,type_name,price)
 - cart_contain_type=(***cart_id***,***type_id***)
-- cart=(***cart_id***,buyer_id,total_price)
+- cart=(***cart_id***,total_price)
 
 
 ## 文件组成
