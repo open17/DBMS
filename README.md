@@ -1,5 +1,5 @@
 # DBMS Project 23F 
->数据库期末大作业
+> 数据库期末大作业
 
 ## 数据库设计
 
@@ -32,9 +32,9 @@
 - cart_contain_goods_type=(***cart_id***,***goods_type_id***)
 - cart=(***cart_id***,total_price)
 
-### 数据库建立
+## 数据库建立
 
-#### 建表与主键约束
+### 建表与主键约束
 ```sql
 CREATE TABLE buyer (
     buyer_id INT,
@@ -112,7 +112,7 @@ CREATE TABLE cart (
 );
 ```
 
-#### 外键约束
+### 外键约束
 ```sql
 ALTER TABLE buyer
 ADD FOREIGN KEY (cart_id) REFERENCES cart(cart_id);
@@ -141,7 +141,7 @@ ADD FOREIGN KEY (cart_id) REFERENCES cart(cart_id),
 ADD FOREIGN KEY (goods_type_id) REFERENCES goods_type(goods_type_id);
 ```
 
-#### trigger约束
+### trigger约束
 - 添加商品时的价格范围约束和库存约束
 ```sql
 CREATE TRIGGER check_goods_inventory
@@ -201,3 +201,37 @@ END;
 ```
 
 
+## 功能设计
+
+### 登录
+- 接受一个post请求
+- 参数：`username`, `password`, `is_admin`
+- 如果`is_admin`为`true`
+    - 从`admin`表中取出`admin_name=username`的`admin_id`和`admin_salt`
+    - 将`password+admin_salt`进行md5加密得到`secret_password`
+    - 检测`secret_password`是否等于`security_with_admin`表中`admin_id=admin_id`的`hash_password`
+- 否则同理从`buyer`表取出并同理检测md5是否等于`sercurity+with_buyer`中的`hash_password` 
+
+### 注册
+<!-- TODO 暂时不支持管理员注册,以后可以改成管理员邀请注册制功能 -->
+- 接受一个post请求
+- 参数：`buyer_name`, `password`
+- 先检测`buyer_name`是否已存在,如存在返回信息
+- 如不存在,根据雪花算法依照时间戳生成`buyer_id`
+- 随机生成一个`salt`,将`buyer_id`, `username`, `salt`存入`buyer`表中
+- 然后将`password+salt`进行md5加密得到`secret_password`和`buyer_id`存入`security_with_buyer`中
+
+### 商品展示
+- 接收 GET 请求参数：`category`（类别）、`keyword`（关键字）、`page`（页码，默认为1）、`limit`（每页显示数量，默认为9）
+- 构造查询语句获取总记录数
+- 根据请求参数构造查询条件，并将条件添加到查询语句中
+- 执行查询获取总记录数
+- 计算偏移量,并构造带 LIMIT 和 OFFSET 的查询语句
+- 如果存在查询结果：
+  - 创建一个空数组 `goods` 存储查询结果
+  - 遍历结果集，将每一行数据添加到 `goods` 数组中
+  - 构造返回的 JSON 数据，包括 `data`（商品数组）、`page`（当前页码）、`limit`（每页显示数量）、`totalCount`（总记录数
+  - 将数组转换为 JSON 字符串
+  - 输出 JSON 字符串作为响应
+- 如果查询结果为空：
+  - 返回一个空数组的 JSON 字符串，包括 `data`（空数组）、`page`（当前页码）、`limit`（每页显示数量）、`totalCount`（总记录数）
