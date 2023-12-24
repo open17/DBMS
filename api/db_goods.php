@@ -7,20 +7,16 @@ header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 
 // 获取 GET 请求参数
-$category = isset($_GET['category']) ? $_GET['category'] : '';
 $keyword = isset($_GET['keyword']) ? $_GET['keyword'] : '';
 $page = isset($_GET['page']) ? $_GET['page'] : 1;
 $limit = isset($_GET['limit']) ? $_GET['limit'] : 9;
 
 // 构造不带 LIMIT 和 OFFSET 的查询语句，用于获取总记录数
-$countSql = "SELECT COUNT(*) AS total FROM goods WHERE inventory <> 0";
-
-if (!empty($category) && $category != 'All') {
-    $countSql .= " AND category = '$category'";
-}
+$countSql = "SELECT * , COUNT(*) AS total FROM goods";
 
 if (!empty($keyword)) {
-    $countSql .= " AND (name LIKE '%$keyword%' OR description LIKE '%$keyword%')";
+    // $countSql .= " WHERE goods_name LIKE '%$keyword%' OR goods_description LIKE '%$keyword%' ";
+    $countSql .= " WHERE goods_name ='$keyword' OR goods_description = '$keyword'";
 }
 
 // 执行查询获取总记录数
@@ -31,16 +27,11 @@ $totalCount = $countResult->fetch_assoc()['total'];
 $offset = ($page - 1) * $limit;
 
 // 构造带 LIMIT 和 OFFSET 的查询语句
-$sql = "SELECT goods_id, inventory, description, image, name, category
-        FROM goods 
-        WHERE inventory <> 0";
-
-if (!empty($category) && $category != 'All') {
-    $sql .= " AND category = '$category'";
-}
+$sql = "SELECT * FROM goods ";
 
 if (!empty($keyword)) {
-    $sql .= " AND (name LIKE '%$keyword%' OR description LIKE '%$keyword%')";
+    // $sql .= " WHERE goods_name LIKE '%$keyword%' OR goods_description LIKE '%$keyword%' ";
+    $sql .= " WHERE goods_name ='$keyword' OR goods_description = '$keyword'";
 }
 
 // 添加 LIMIT 子句
