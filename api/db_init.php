@@ -32,137 +32,156 @@ $conn->select_db($database);
 
 // 创建表格的SQL语句
 $createTableQuery = "
-CREATE TABLE IF NOT EXISTS goods (
-    goods_id INT PRIMARY KEY,
-    inventory INT,
-    description TEXT,
-    image LONGBLOB,
-    name VARCHAR(255),
-    category VARCHAR(255),
-    information LONGBLOB,
-    seller_id INT
-);
-
-CREATE TABLE IF NOT EXISTS type (
-    goods_id INT,
-    type_id INT,
-    seller_id INT,
-    type_name VARCHAR(255),
-    price DECIMAL(10, 2),
-    PRIMARY KEY (goods_id, type_id)
-);
-
-CREATE TABLE IF NOT EXISTS comment (
-    comment_id INT PRIMARY KEY,
-    content TEXT,
-    pictures BLOB,
-    rating INT,
+CREATE TABLE buyer (
     buyer_id INT,
-    goods_id INT
+    buyer_name VARCHAR(255),
+    buyer_salt VARCHAR(255),
+    cart_id INT,
+    PRIMARY KEY (buyer_id, buyer_name)
 );
 
-CREATE TABLE IF NOT EXISTS buyer (
+CREATE TABLE admin (
+    admin_id INT,
+    admin_name VARCHAR(255),
+    admin_salt VARCHAR(255),
+    PRIMARY KEY (admin_id, admin_name)
+);
+
+CREATE TABLE security_with_admin (
+    admin_id INT PRIMARY KEY,
+    hash_password VARCHAR(255)
+);
+
+CREATE TABLE security_with_buyer (
     buyer_id INT PRIMARY KEY,
-    name VARCHAR(255),
-    phone VARCHAR(20),
-    salt VARCHAR(255),
-    email VARCHAR(255),
+    hash_password VARCHAR(255)
+);
+
+CREATE TABLE orders (
+    order_id INT PRIMARY KEY,
+    order_date DATE,
+    payment VARCHAR(255),
     cart_id INT
 );
 
-CREATE TABLE IF NOT EXISTS seller (
-    seller_id INT PRIMARY KEY,
-    name VARCHAR(255),
-    phone VARCHAR(20),
-    salt VARCHAR(255),
-    email VARCHAR(255),
-    income DECIMAL(10, 2)
+CREATE TABLE admin_view_order (
+    admin_id INT,
+    order_id INT,
+    PRIMARY KEY (admin_id, order_id)
 );
 
-CREATE TABLE IF NOT EXISTS address (
-    address_id INT PRIMARY KEY,
-    post VARCHAR(20),
-    detail_address VARCHAR(255),
+CREATE TABLE info (
+    buyer_id INT PRIMARY KEY,
+    post VARCHAR(255),
+    street VARCHAR(255),
     city VARCHAR(255),
-    country VARCHAR(255)
+    country VARCHAR(255),
+    email VARCHAR(255),
+    phone VARCHAR(255)
 );
 
-CREATE TABLE IF NOT EXISTS security (
-    security_id INT PRIMARY KEY,
-    password VARCHAR(255)
+CREATE TABLE goods (
+    goods_id INT PRIMARY KEY,
+    goods_name VARCHAR(255),
+    goods_description VARCHAR(255), 
+    goods_pic VARCHAR(255),
+    goods_information_pic VARCHAR(255)
 );
 
-CREATE TABLE IF NOT EXISTS cart (
-    cart_id INT PRIMARY KEY,
+CREATE TABLE goods_type (
+    goods_type_id INT PRIMARY KEY,
     goods_id INT,
-    quantity INT
+    goods_type_name VARCHAR(255),
+    price DECIMAL(10, 2)
 );
 
-CREATE TABLE IF NOT EXISTS type_contain_in_cart (
+CREATE TABLE cart_contain_goods_type (
     cart_id INT,
-    type_id INT,
-    num INT,
-    PRIMARY KEY (cart_id, type_id)
+    goods_type_id INT,
+    PRIMARY KEY (cart_id, goods_type_id)
 );
 
-CREATE TABLE IF NOT EXISTS purchase (
-    purchase_id INT PRIMARY KEY,
-    cart_id INT,
-    buyer_id INT,
-    price DECIMAL(10, 2),
-    time DATETIME
-);
-
-CREATE TABLE IF NOT EXISTS buyer_security (
-    security_id INT,
-    buyer_id INT,
-    PRIMARY KEY (security_id, buyer_id)
-);
-
-CREATE TABLE IF NOT EXISTS seller_security (
-    security_id INT,
-    seller_id INT,
-    PRIMARY KEY (security_id, seller_id)
-);
-
-CREATE TABLE IF NOT EXISTS sell (
-    sell_id INT PRIMARY KEY,
-    purchase_id INT,
-    num INT,
-    profit DECIMAL(10, 2)
+CREATE TABLE cart (
+    cart_id INT PRIMARY KEY,
+    total_price DECIMAL(10, 2)
 );
 ";
 
 $addForeignKeyQuery = "
-ALTER TABLE goods
-ADD FOREIGN KEY (seller_id) REFERENCES seller(seller_id);
-
-ALTER TABLE type
-ADD FOREIGN KEY (goods_id) REFERENCES goods(goods_id),
-ADD FOREIGN KEY (seller_id) REFERENCES seller(seller_id);
-
-ALTER TABLE comment
-ADD FOREIGN KEY (buyer_id) REFERENCES buyer(buyer_id),
-ADD FOREIGN KEY (goods_id) REFERENCES goods(goods_id);
-
 ALTER TABLE buyer
 ADD FOREIGN KEY (cart_id) REFERENCES cart(cart_id);
 
-ALTER TABLE purchase
+ALTER TABLE security_with_admin
+ADD FOREIGN KEY (admin_id) REFERENCES admin(admin_id);
+
+ALTER TABLE security_with_buyer
+ADD FOREIGN KEY (buyer_id) REFERENCES buyer(buyer_id);
+
+ALTER TABLE orders
+ADD FOREIGN KEY (cart_id) REFERENCES cart(cart_id);
+
+ALTER TABLE admin_view_order
+ADD FOREIGN KEY (admin_id) REFERENCES admin(admin_id),
+ADD FOREIGN KEY (order_id) REFERENCES orders(order_id);
+
+ALTER TABLE info
+ADD FOREIGN KEY (buyer_id) REFERENCES buyer(buyer_id);
+
+ALTER TABLE goods_type
+ADD FOREIGN KEY (goods_id) REFERENCES goods(goods_id);
+
+ALTER TABLE cart_contain_goods_type
 ADD FOREIGN KEY (cart_id) REFERENCES cart(cart_id),
-ADD FOREIGN KEY (buyer_id) REFERENCES buyer(buyer_id);
-
-ALTER TABLE buyer_security
-ADD FOREIGN KEY (security_id) REFERENCES security(security_id),
-ADD FOREIGN KEY (buyer_id) REFERENCES buyer(buyer_id);
-
-ALTER TABLE seller_security
-ADD FOREIGN KEY (security_id) REFERENCES security(security_id),
-ADD FOREIGN KEY (seller_id) REFERENCES seller(seller_id);
-
-ALTER TABLE sell
-ADD FOREIGN KEY (purchase_id) REFERENCES purchase(purchase_id);
+ADD FOREIGN KEY (goods_type_id) REFERENCES goods_type(goods_type_id);
 ";
+
+
+$insertDataQuery = "
+
+INSERT INTO buyer (buyer_id, buyer_name, buyer_salt, cart_id)
+VALUES (1, 'John', 'somesalt', 1);
+
+
+INSERT INTO admin (admin_id, admin_name, admin_salt)
+VALUES (1, 'Admin', 'somesalt');
+
+
+INSERT INTO security_with_admin (admin_id, hash_password)
+VALUES (1, 'hashedpassword');
+
+
+INSERT INTO security_with_buyer (buyer_id, hash_password)
+VALUES (1, 'hashedpassword');
+
+
+INSERT INTO orders (order_id, order_date, payment, cart_id)
+VALUES (1, '2023-12-24', 'Credit Card', 1);
+
+
+INSERT INTO admin_view_order (admin_id, order_id)
+VALUES (1, 1);
+
+
+INSERT INTO info (buyer_id, post, street, city, country, email, phone)
+VALUES (1, '12345', 'Main Street', 'City', 'Country', 'johndoe@example.com', '1234567890');
+
+
+INSERT INTO goods (goods_id, goods_name, goods_description, goods_pic, goods_information_pic)
+VALUES (1, 'Product A', 'Description of Product A', 'phone.png', 'info.jpg');
+
+
+INSERT INTO goods_type (goods_type_id, goods_id, goods_type_name, price)
+VALUES (1, 1, 'Type A', 10.99);
+
+
+INSERT INTO cart_contain_goods_type (cart_id, goods_type_id)
+VALUES (1, 1);
+
+
+INSERT INTO cart (cart_id, total_price)
+VALUES (1, 10.99);
+";
+
 
 // 执行创建表格的SQL语句
 if ($conn->multi_query($createTableQuery) === TRUE) {
@@ -191,7 +210,7 @@ if ($conn->multi_query($addForeignKeyQuery) === TRUE) {
         }
         // 移到下一个结果集
     } while ($conn->next_result());
-    echo "外键约束添加成功";
+    echo "外键约束添加成功<br>";
 } else {
     echo "外键约束添加失败: " . $conn->error;
 }
@@ -199,150 +218,90 @@ if ($conn->multi_query($addForeignKeyQuery) === TRUE) {
 // 关闭外键约束检查
 $conn->query("SET FOREIGN_KEY_CHECKS=0");
 
-// 插入数据到 seller 表
-$sql = "INSERT INTO seller (seller_id, name, phone, salt, email, income)
-        VALUES ('1', '卖家1', '123456789', 'salt1', 'seller1@example.com', '1000')";
 
-$conn->query($sql);
+if ($conn->multi_query($insertDataQuery) === TRUE) {
+    // 处理每个查询的结果集
+    do {
+        // 获取当前查询的结果集
+        if ($result = $conn->store_result()) {
+            // 释放结果集
+            $result->free();
+        }
+        // 移到下一个结果集
+    } while ($conn->next_result());
+    echo "基本数据添加成功<br>";
+} else {
+    echo "基本数据添加失败: " . $conn->error;
+}
 
-// 插入数据到 goods 表
-$sql = "INSERT INTO goods (goods_id, inventory, description, image, name, category, information, seller_id)
-        VALUES ('1', '0', '描述1', 'image1.jpg', '商品1', 'Others', '信息1', '1')";
 
-$conn->query($sql);
-
-// 插入数据到 type 表
-$sql = "INSERT INTO type (goods_id, type_id, seller_id, type_name, price)
-        VALUES ('1', '1', '1', '类型1', '10.99')";
-
-$conn->query($sql);
-
-// 插入数据到 comment 表
-$sql = "INSERT INTO comment (comment_id, content, pictures, rating, buyer_id, goods_id)
-        VALUES ('1', '好商品！', 'image1.jpg', '5', '1', '1')";
-
-$conn->query($sql);
-
-// 插入数据到 buyer 表
-$sql = "INSERT INTO buyer (buyer_id, name, phone, salt, email, cart_id)
-        VALUES ('1', '买家1', '987654321', 'salt2', 'buyer1@example.com', '1')";
-
-$conn->query($sql);
-
-// 插入数据到 address 表
-$sql = "INSERT INTO address (address_id, post, detail_address, city, country)
-        VALUES ('1', '123456', '地址1', '城市1', '国家1')";
-
-$conn->query($sql);
-
-// 插入数据到 security 表
-$sql = "INSERT INTO security (security_id, password)
-        VALUES ('1', 'password1')";
-
-$conn->query($sql);
-
-// 插入数据到 cart 表
-$sql = "INSERT INTO cart (cart_id, goods_id, quantity)
-        VALUES ('1', '1', '2')";
-
-$conn->query($sql);
-
-// 插入数据到 goods_contain_in_cart 表
-$sql = "INSERT INTO type_contain_in_cart (cart_id, type_id, num)
-        VALUES ('1', '1', '2')";
-
-$conn->query($sql);
-
-// 插入数据到 purchase 表
-$sql = "INSERT INTO purchase (purchase_id, cart_id, buyer_id, price, time)
-        VALUES ('1', '1', '1', '21.98', '2023-12-17 10:00:00')";
-
-$conn->query($sql);
-
-// 插入数据到 buyer_security 表
-$sql = "INSERT INTO buyer_security (security_id, buyer_id)
-        VALUES ('1', '1')";
-
-$conn->query($sql);
-
-// 插入数据到 seller_security 表
-$sql = "INSERT INTO seller_security (security_id, seller_id)
-        VALUES ('1', '1')";
-
-$conn->query($sql);
-
-// 插入数据到 sell 表
-$sql = "INSERT INTO sell (sell_id, purchase_id, num, profit)
-        VALUES ('1', '1', '2', '21.98')";
-
-$conn->query($sql);
 
 // 打开外键约束检查
 $conn->query("SET FOREIGN_KEY_CHECKS=1");
 
-// 定义类别数组
-$categories = ['Phone', 'Computer', 'Others', 'Audiovisual'];
-$imageUrls = [
-    './img/202312032218979.png',
-    './img/202312032224142.jpeg',
-];
+// // 定义类别数组
+// $categories = ['Phone', 'Computer', 'Others', 'Audiovisual'];
+// $imageUrls = [
+//     './img/202312032218979.png',
+//     './img/202312032224142.jpeg',
+// ];
 
-$blobDataArray = [];
+// $blobDataArray = [];
 
-foreach ($imageUrls as $imageUrl) {
-    // 读取图片文件的二进制数据
-    $imageData = file_get_contents($imageUrl);
-    // 将图片数据进行 Base64 编码
-    $base64Data = base64_encode($imageData);
-    // 将编码后的图片数据存储到数组中
-    $blobDataArray[] = $base64Data;
-}
-$info=base64_encode(file_get_contents('./img/info.jpeg'));
-// 循环插入数据到 goods 表
-for ($i = 2; $i <= 500; $i++) {
-    // 生成随机类别索引
-    $categoryIndex = array_rand($categories);
-    $category = $categories[$categoryIndex];
-    $imageBlob = $blobDataArray[array_rand($blobDataArray)];
-    // 生成随机库存量和价格
-    $inventory = rand(1, 100);
-    $price = rand(100, 999) . '.' . rand(0, 99);
-    $randomText = generateRandomText();
-    // 构造插入语句并执行
-    $sql = "INSERT INTO goods (goods_id, inventory, description, image, name, category, information, seller_id)
-            VALUES ('$i', '$inventory', '$randomText', '$imageBlob', 'A$i', '$category', '$info' , '1')";
+// foreach ($imageUrls as $imageUrl) {
+//     // 读取图片文件的二进制数据
+//     $imageData = file_get_contents($imageUrl);
+//     // 将图片数据进行 Base64 编码
+//     $base64Data = base64_encode($imageData);
+//     // 将编码后的图片数据存储到数组中
+//     $blobDataArray[] = $base64Data;
+// }
+// $info=base64_encode(file_get_contents('./img/info.jpeg'));
+// // 循环插入数据到 goods 表
+// for ($i = 2; $i <= 500; $i++) {
+//     // 生成随机类别索引
+//     $categoryIndex = array_rand($categories);
+//     $category = $categories[$categoryIndex];
+//     $imageBlob = $blobDataArray[array_rand($blobDataArray)];
+//     // 生成随机库存量和价格
+//     $inventory = rand(1, 100);
+//     $price = rand(100, 999) . '.' . rand(0, 99);
+//     $randomText = generateRandomText();
+//     // 构造插入语句并执行
+//     $sql = "INSERT INTO goods (goods_id, inventory, description, image, name, category, information, seller_id)
+//             VALUES ('$i', '$inventory', '$randomText', '$imageBlob', 'A$i', '$category', '$info' , '1')";
     
-    $conn->query($sql);
-}
+//     $conn->query($sql);
+// }
 
-function generateRandomText() {
-    $words = ['phone', 'pad', 'like', 'robot', 'amet', 'consectetur', 'adipiscing', 'elit'];
-    $randomText = '';
+// function generateRandomText() {
+//     $words = ['phone', 'pad', 'like', 'robot', 'amet', 'consectetur', 'adipiscing', 'elit'];
+//     $randomText = '';
 
-    $numWords = rand(5, 16); // 随机生成文字的数量
+//     $numWords = rand(5, 16); // 随机生成文字的数量
 
-    for ($i = 0; $i < $numWords; $i++) {
-        $randomIndex = array_rand($words);
-        $randomText .= $words[$randomIndex] . ' ';
-    }
+//     for ($i = 0; $i < $numWords; $i++) {
+//         $randomIndex = array_rand($words);
+//         $randomText .= $words[$randomIndex] . ' ';
+//     }
 
-    return trim($randomText);
-}
+//     return trim($randomText);
+// }
 
-// 循环生成数据并插入到表中
-for ($i = 1; $i <= 1000; $i++) {
-    // 生成随机数据
-    $goodsId = mt_rand(1, 80);
-    $typeId = mt_rand(1, 10);
-    $sellerId = 1;
-    $typeName = 'Type ' . ($i + 1);
-    $price = rand(100, 999) . '.' . rand(0, 99);
-    // 构造插入语句
-    $sql = "INSERT INTO type (goods_id, type_id, seller_id, type_name, price)
-            VALUES ($goodsId, $i, $sellerId, '$typeName', $price)";
-    // 执行插入操作
-    $conn->query($sql);
-}
+// // 循环生成数据并插入到表中
+// for ($i = 1; $i <= 1000; $i++) {
+//     // 生成随机数据
+//     $goodsId = mt_rand(1, 80);
+//     $typeId = mt_rand(1, 10);
+//     $sellerId = 1;
+//     $typeName = 'Type ' . ($i + 1);
+//     $price = rand(100, 999) . '.' . rand(0, 99);
+//     // 构造插入语句
+//     $sql = "INSERT INTO type (goods_id, type_id, seller_id, type_name, price)
+//             VALUES ($goodsId, $i, $sellerId, '$typeName', $price)";
+//     // 执行插入操作
+//     $conn->query($sql);
+// }
 
 
 // 关闭数据库连接

@@ -137,7 +137,7 @@ ADD FOREIGN KEY (cart_id) REFERENCES cart(cart_id);
 
 ALTER TABLE admin_view_order
 ADD FOREIGN KEY (admin_id) REFERENCES admin(admin_id),
-ADD FOREIGN KEY (order_id) REFERENCES order(order_id);
+ADD FOREIGN KEY (order_id) REFERENCES orders(order_id);
 
 ALTER TABLE info
 ADD FOREIGN KEY (buyer_id) REFERENCES buyer(buyer_id);
@@ -279,8 +279,6 @@ END;
 
 - 接受一个get请求,包含参数`buyer_id`
 - 查询info表并返回
-
-
 
 ### 查询订单历史(管理员)
 <!-- TODO -->
