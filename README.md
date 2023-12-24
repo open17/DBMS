@@ -256,13 +256,15 @@ END;
 
 ### 删除购物车商品
 
-- 接收 GET 请求参数 `goods_type_id`和`cart_id`
+- 接收 GET 请求参数 `goods_type_id`和`buyer_id`
+- 通过`buyer_id`查询`buyer`表，获取`cart_id`
 - 删除`cart_contain_goods_type`表对应的`goods_type_id`
 - trigger自动更新`cart`的`total_price`
 
 ### 产生订单
 <!-- TODO 当前的购买只能购买全部商品 -->
-- 接收 GET 请求参数 `cart_id`
+- 接收 GET 请求参数 `buyer_id`
+- 通过`buyer_id`查询`buyer`表，获取`cart_id`
 - 获取cart的total_price作为payment生成order
 - 同时trigger自动清空
 

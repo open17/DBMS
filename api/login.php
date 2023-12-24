@@ -1,5 +1,7 @@
 <?php
-
+    // 设置响应头为 JSON 类型
+    header('Content-Type: application/json');
+    header('Access-Control-Allow-Origin: *');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // 获取 POST 请求参数
