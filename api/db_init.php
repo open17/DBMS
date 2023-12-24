@@ -33,45 +33,45 @@ $conn->select_db($database);
 // 创建表格的SQL语句
 $createTableQuery = "
 CREATE TABLE buyer (
-    buyer_id INT,
+    buyer_id VARCHAR(255),
     buyer_name VARCHAR(255),
     buyer_salt VARCHAR(255),
-    cart_id INT,
+    cart_id VARCHAR(255),
     PRIMARY KEY (buyer_id, buyer_name)
 );
 
 CREATE TABLE admin (
-    admin_id INT,
+    admin_id VARCHAR(255),
     admin_name VARCHAR(255),
     admin_salt VARCHAR(255),
     PRIMARY KEY (admin_id, admin_name)
 );
 
 CREATE TABLE security_with_admin (
-    admin_id INT PRIMARY KEY,
+    admin_id VARCHAR(255) PRIMARY KEY,
     hash_password VARCHAR(255)
 );
 
 CREATE TABLE security_with_buyer (
-    buyer_id INT PRIMARY KEY,
+    buyer_id VARCHAR(255) PRIMARY KEY,
     hash_password VARCHAR(255)
 );
 
 CREATE TABLE orders (
-    order_id INT PRIMARY KEY,
+    order_id VARCHAR(255) PRIMARY KEY,
     order_date DATE,
     payment VARCHAR(255),
-    cart_id INT
+    cart_id VARCHAR(255)
 );
 
 CREATE TABLE admin_view_order (
-    admin_id INT,
-    order_id INT,
+    admin_id VARCHAR(255),
+    order_id VARCHAR(255),
     PRIMARY KEY (admin_id, order_id)
 );
 
 CREATE TABLE info (
-    buyer_id INT PRIMARY KEY,
+    buyer_id VARCHAR(255) PRIMARY KEY,
     post VARCHAR(255),
     street VARCHAR(255),
     city VARCHAR(255),
@@ -81,7 +81,7 @@ CREATE TABLE info (
 );
 
 CREATE TABLE goods (
-    goods_id INT PRIMARY KEY,
+    goods_id VARCHAR(255) PRIMARY KEY,
     goods_name VARCHAR(255),
     goods_description VARCHAR(255), 
     goods_pic VARCHAR(255),
@@ -89,20 +89,20 @@ CREATE TABLE goods (
 );
 
 CREATE TABLE goods_type (
-    goods_type_id INT PRIMARY KEY,
-    goods_id INT,
+    goods_type_id VARCHAR(255) PRIMARY KEY,
+    goods_id VARCHAR(255),
     goods_type_name VARCHAR(255),
     price DECIMAL(10, 2)
 );
 
 CREATE TABLE cart_contain_goods_type (
-    cart_id INT,
-    goods_type_id INT,
+    cart_id VARCHAR(255),
+    goods_type_id VARCHAR(255),
     PRIMARY KEY (cart_id, goods_type_id)
 );
 
 CREATE TABLE cart (
-    cart_id INT PRIMARY KEY,
+    cart_id VARCHAR(255) PRIMARY KEY,
     total_price DECIMAL(10, 2)
 );
 ";
@@ -167,7 +167,7 @@ VALUES (1, '12345', 'Main Street', 'City', 'Country', 'johndoe@example.com', '12
 
 
 INSERT INTO goods (goods_id, goods_name, goods_description, goods_pic, goods_information_pic)
-VALUES (1, 'Product A', 'Description of Product A', 'phone.png', 'info.jpg');
+VALUES (1, 'Product A', 'Description of Product A', 'iphone.png', 'iphone_info.jpg');
 
 
 INSERT INTO goods_type (goods_type_id, goods_id, goods_type_name, price)
@@ -239,69 +239,57 @@ if ($conn->multi_query($insertDataQuery) === TRUE) {
 // 打开外键约束检查
 $conn->query("SET FOREIGN_KEY_CHECKS=1");
 
-// // 定义类别数组
-// $categories = ['Phone', 'Computer', 'Others', 'Audiovisual'];
-// $imageUrls = [
-//     './img/202312032218979.png',
-//     './img/202312032224142.jpeg',
-// ];
+$imageUrls = [
+    'huawei_info.jpg',
+    'iphone.png',
+];
+$imageInfoUrls=[
+    'huawei_info.jpg',
+    'iphone_info.jpg',
+];
 
-// $blobDataArray = [];
+// 循环插入数据到 goods 表
+for ($i = 2; $i <= 10; $i++) {
+    // 生成随机类别索引
+    $randomIndex=rand(0,1);
+    $randomText = generateRandomText();
+    // 构造插入语句并执行
+    $sql = "INSERT INTO goods (goods_id, goods_name, goods_description, goods_pic, goods_information_pic)
+            VALUES ('$i', 'Product$i', '$randomText', '$imageUrls[$randomIndex]', '$imageInfoUrls[$randomIndex]')";
+    $conn->query($sql);
+    // 循环生成数据并插入到表中
+    for ($j = 1; $j <= 10; $j++) {
+        $typeName = 'Type ' . ($j + 1);
+        $price = rand(100, 999) . '.' . rand(0, 99);
+        $timestamp = time();  // 获取当前的时间戳
+        $uuid = uniqid();  // 生成UUID
+        $id = $timestamp. "" .$uuid;
+        // echo($id . '<br>');
+        // 构造插入语句
+        $sql = "INSERT INTO goods_type (goods_type_id, goods_id, goods_type_name, price)
+                VALUES ('$id', '$i', '$typeName', $price)";
+        // 执行插入操作
+        $conn->query($sql);
+    }
+}
 
-// foreach ($imageUrls as $imageUrl) {
-//     // 读取图片文件的二进制数据
-//     $imageData = file_get_contents($imageUrl);
-//     // 将图片数据进行 Base64 编码
-//     $base64Data = base64_encode($imageData);
-//     // 将编码后的图片数据存储到数组中
-//     $blobDataArray[] = $base64Data;
-// }
-// $info=base64_encode(file_get_contents('./img/info.jpeg'));
-// // 循环插入数据到 goods 表
-// for ($i = 2; $i <= 500; $i++) {
-//     // 生成随机类别索引
-//     $categoryIndex = array_rand($categories);
-//     $category = $categories[$categoryIndex];
-//     $imageBlob = $blobDataArray[array_rand($blobDataArray)];
-//     // 生成随机库存量和价格
-//     $inventory = rand(1, 100);
-//     $price = rand(100, 999) . '.' . rand(0, 99);
-//     $randomText = generateRandomText();
-//     // 构造插入语句并执行
-//     $sql = "INSERT INTO goods (goods_id, inventory, description, image, name, category, information, seller_id)
-//             VALUES ('$i', '$inventory', '$randomText', '$imageBlob', 'A$i', '$category', '$info' , '1')";
-    
-//     $conn->query($sql);
-// }
+function generateRandomText() {
+    $words = ['Lorem', 'ipsum', 'dolor', 'sit', 'amet', 'consectetur', 'adipiscing', 'elit',
+    'sed', 'do', 'eiusmod', 'tempor', 'incididunt', 'ut', 'labore', 'et', 'dolore','huawei',
+    'magna', 'aliqua', 'Ut', 'enim', 'ad', 'minim', 'veniam', 'quis', 'nostrud','phone', 'pad', 'like', 'robot', 'amet', 'consectetur', 'adipiscing', 'elit'];
+    $randomText = '';
 
-// function generateRandomText() {
-//     $words = ['phone', 'pad', 'like', 'robot', 'amet', 'consectetur', 'adipiscing', 'elit'];
-//     $randomText = '';
+    $numWords = rand(2, 5); // 随机生成文字的数量
 
-//     $numWords = rand(5, 16); // 随机生成文字的数量
+    for ($i = 0; $i < $numWords; $i++) {
+        $randomIndex = array_rand($words);
+        $randomText .= $words[$randomIndex] . ' ';
+    }
 
-//     for ($i = 0; $i < $numWords; $i++) {
-//         $randomIndex = array_rand($words);
-//         $randomText .= $words[$randomIndex] . ' ';
-//     }
+    return trim($randomText);
+}
 
-//     return trim($randomText);
-// }
 
-// // 循环生成数据并插入到表中
-// for ($i = 1; $i <= 1000; $i++) {
-//     // 生成随机数据
-//     $goodsId = mt_rand(1, 80);
-//     $typeId = mt_rand(1, 10);
-//     $sellerId = 1;
-//     $typeName = 'Type ' . ($i + 1);
-//     $price = rand(100, 999) . '.' . rand(0, 99);
-//     // 构造插入语句
-//     $sql = "INSERT INTO type (goods_id, type_id, seller_id, type_name, price)
-//             VALUES ($goodsId, $i, $sellerId, '$typeName', $price)";
-//     // 执行插入操作
-//     $conn->query($sql);
-// }
 
 
 // 关闭数据库连接
