@@ -34,13 +34,6 @@
 - cart=(***cart_id***,total_price)
 
 
-## 文件组成
-
-## 需求与文档
-见 `require/README.md`
-
-
-
 
 
 
