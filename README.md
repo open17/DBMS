@@ -24,7 +24,7 @@
 - admin = (***admin_id***, ***admin_name***, admin_salt)
 - security_with_admin=(***admin_id***,hash_password)
 - security_with_buyer=(***buyer_id***,hash_password)
-- orders=(***order_id***,date,payment,cart_id)
+- orders=(***order_id***,date,payment,buyer_id)
 - admin_view_order=(***admin_id***,***order_id***)
 - info=(***buyer_id***,post,street,city,country,email,phone)
 - goods=(***goods_id***,goods_name,goods_inventory,goods_description,goods_pic,goods_information_pic)
@@ -65,7 +65,7 @@ CREATE TABLE orders (
     order_id INT PRIMARY KEY,
     order_date DATE,
     payment VARCHAR(255),
-    cart_id INT
+    buyer_id INT
 );
 
 CREATE TABLE admin_view_order (
@@ -124,7 +124,7 @@ ALTER TABLE security_with_buyer
 ADD FOREIGN KEY (buyer_id) REFERENCES buyer(buyer_id);
 
 ALTER TABLE orders
-ADD FOREIGN KEY (cart_id) REFERENCES cart(cart_id);
+ADD FOREIGN KEY (buyer_id) REFERENCES buyer(buyer_id);
 
 ALTER TABLE admin_view_order
 ADD FOREIGN KEY (admin_id) REFERENCES admin(admin_id),
