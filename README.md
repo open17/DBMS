@@ -141,6 +141,63 @@ ADD FOREIGN KEY (cart_id) REFERENCES cart(cart_id),
 ADD FOREIGN KEY (goods_type_id) REFERENCES goods_type(goods_type_id);
 ```
 
+#### trigger约束
+- 添加商品时的价格范围约束和库存约束
+```sql
+CREATE TRIGGER check_goods_inventory
+BEFORE INSERT ON goods_type
+FOR EACH ROW
+BEGIN
+    DECLARE available_inventory INT;
+    SELECT goods_inventory INTO available_inventory
+    FROM goods
+    WHERE goods_id = NEW.goods_id;
+    
+    IF NEW.price <= 0 OR NEW.price IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Price must be greater than 0.';
+    END IF;
+    
+    IF available_inventory < 1 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'No available inventory for the specified goods.';
+    END IF;
+    
+    SET available_inventory = available_inventory - 1;
+    
+    UPDATE goods
+    SET goods_inventory = available_inventory
+    WHERE goods_id = NEW.goods_id;
+END;
+```
 
+- order形成时清空cart_contain_goods_type中对应cart_id的商品,同时清空cart的total_price
+```sql
+CREATE TRIGGER clear_cart_and_goods
+AFTER INSERT ON orders
+FOR EACH ROW
+BEGIN
+    DELETE FROM cart_contain_goods_type
+    WHERE cart_id = NEW.cart_id;
+    
+    UPDATE cart
+    SET total_price = 0
+    WHERE cart_id = NEW.cart_id;
+END;
+```
+- 添加cart_contain_goods_type时增加对应的cart中的total_price
+```sql
+CREATE TRIGGER update_cart_total_price
+AFTER INSERT ON cart_contain_goods_type
+FOR EACH ROW
+BEGIN
+    DECLARE goods_price DECIMAL(10, 2);
+    SELECT price INTO goods_price
+    FROM goods_type
+    WHERE goods_type_id = NEW.goods_type_id;
+    
+    UPDATE cart
+    SET total_price = total_price + goods_price
+    WHERE cart_id = NEW.cart_id;
+END;
+```
 
 
