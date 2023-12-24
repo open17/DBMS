@@ -6,6 +6,7 @@ const PrerenderSPAPlugin = require('prerender-spa-plugin-next');
  
 module.exports = defineConfig({
   transpileDependencies: true,
+  publicPath: './'
   // publicPath:"/",
   // prerender-spa-plugin-next预渲染
   // configureWebpack: {
@@ -16,6 +17,7 @@ module.exports = defineConfig({
   //     })
   //   ]
   // },
+  // //代理服务器
   // devServer: {
   //   host: 'localhost', // 指定开发服务器的主机名，默认为 localhost
   //   port: 8080, // 指定开发服务器的端口号，默认为 8080

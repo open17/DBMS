@@ -3,7 +3,6 @@
 
 ## 数据库设计
 
-
 ### ER图设计
 <img src="design/ER1.png" style="background-color:#fff;"/>
 
