@@ -223,7 +223,7 @@ END;
 - 如果查询结果为空：
   - 返回一个空数组的 JSON 字符串，包括 `data`（空数组）、`page`（当前页码）、`limit`（每页显示数量）、`totalCount`（总记录数）
 
-### 商品详情查询功能
+### 商品详情
 - 获取 GET 请求参数 `goodsId`
 - 查询商品详情，构造查询语句并执行查询
 - 查询商品类型信息，构造查询语句并执行查询
@@ -260,6 +260,30 @@ END;
 - 删除`cart_contain_goods_type`表对应的`goods_type_id`
 - trigger自动更新`cart`的`total_price`
 
-### 购买
+### 产生订单
 <!-- TODO 当前的购买只能购买全部商品 -->
+- 接收 GET 请求参数 `cart_id`
+- 获取cart的total_price作为payment生成order
+- 同时trigger自动清空
 
+### 修改用户信息
+
+- 接受一个post请求,包含参数`buyer_id`,`post`,`street`,`city``,country`,`email`,`phone`
+- 检查参数是否完整
+- 检查参数是否符合格式
+- 查询info表
+- 如果不存在则插入
+- 否则更新
+
+### 获取用户信息
+
+- 接受一个get请求,包含参数`buyer_id`
+- 查询info表并返回
+
+
+
+### 查询订单历史(管理员)
+<!-- TODO -->
+
+### 商品增加(管理员)
+<!-- TODO -->
