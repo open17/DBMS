@@ -47,45 +47,45 @@
 ### 建表与主键约束
 ```sql
 CREATE TABLE buyer (
-    buyer_id INT,
+    buyer_id VARCHAR(255),
     buyer_name VARCHAR(255),
     buyer_salt VARCHAR(255),
-    cart_id INT,
+    cart_id VARCHAR(255),
     PRIMARY KEY (buyer_id, buyer_name)
 );
 
 CREATE TABLE admin (
-    admin_id INT,
+    admin_id VARCHAR(255),
     admin_name VARCHAR(255),
     admin_salt VARCHAR(255),
     PRIMARY KEY (admin_id, admin_name)
 );
 
 CREATE TABLE security_with_admin (
-    admin_id INT PRIMARY KEY,
+    admin_id VARCHAR(255) PRIMARY KEY,
     hash_password VARCHAR(255)
 );
 
 CREATE TABLE security_with_buyer (
-    buyer_id INT PRIMARY KEY,
+    buyer_id VARCHAR(255) PRIMARY KEY,
     hash_password VARCHAR(255)
 );
 
 CREATE TABLE orders (
-    order_id INT PRIMARY KEY,
+    order_id VARCHAR(255) PRIMARY KEY,
     order_date DATE,
     payment VARCHAR(255),
-    cart_id INT
+    cart_id VARCHAR(255)
 );
 
 CREATE TABLE admin_view_order (
-    admin_id INT,
-    order_id INT,
+    admin_id VARCHAR(255),
+    order_id VARCHAR(255),
     PRIMARY KEY (admin_id, order_id)
 );
 
 CREATE TABLE info (
-    buyer_id INT PRIMARY KEY,
+    buyer_id VARCHAR(255) PRIMARY KEY,
     post VARCHAR(255),
     street VARCHAR(255),
     city VARCHAR(255),
@@ -95,7 +95,7 @@ CREATE TABLE info (
 );
 
 CREATE TABLE goods (
-    goods_id INT PRIMARY KEY,
+    goods_id VARCHAR(255) PRIMARY KEY,
     goods_name VARCHAR(255),
     goods_description VARCHAR(255), 
     goods_pic VARCHAR(255),
@@ -103,20 +103,20 @@ CREATE TABLE goods (
 );
 
 CREATE TABLE goods_type (
-    goods_type_id INT PRIMARY KEY,
-    goods_id INT,
+    goods_type_id VARCHAR(255) PRIMARY KEY,
+    goods_id VARCHAR(255),
     goods_type_name VARCHAR(255),
     price DECIMAL(10, 2)
 );
 
 CREATE TABLE cart_contain_goods_type (
-    cart_id INT,
-    goods_type_id INT,
+    cart_id VARCHAR(255),
+    goods_type_id VARCHAR(255),
     PRIMARY KEY (cart_id, goods_type_id)
 );
 
 CREATE TABLE cart (
-    cart_id INT PRIMARY KEY,
+    cart_id VARCHAR(255) PRIMARY KEY,
     total_price DECIMAL(10, 2)
 );
 ```
