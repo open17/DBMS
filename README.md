@@ -22,7 +22,6 @@
 - security_with_admin=(***security_id***, ***admin_id***,hash_password)
 - security_with_buyer=(***security_id***, ***buyer_id***,hash_password)
 - orders=(***order_id***,date,payment,cart_id,buyer_id)
-- admin_view_order=(***admin_id***,***order_id***)
 - info=(***info_id***,buyer_id,post,street,city,country,email,phone)
 - goods=(***goods_id***,goods_name,goods_description,goods_pic,goods_information_pic)
 - goods_type=(***goods_type_id***,goods_id,goods_type_name,price)
@@ -35,7 +34,6 @@
 - security_with_admin=(***admin_id***,hash_password)
 - security_with_buyer=(***buyer_id***,hash_password)
 - orders=(***order_id***,date,payment,cart_id)
-- admin_view_order=(***admin_id***,***order_id***)
 - info=(***buyer_id***,post,street,city,country,email,phone)
 - goods=(***goods_id***,goods_name,goods_description,goods_pic,goods_information_pic)
 - goods_type=(***goods_type_id***,goods_id,goods_type_name,price)
@@ -76,12 +74,6 @@ CREATE TABLE orders (
     order_date DATE,
     payment VARCHAR(255),
     cart_id VARCHAR(255)
-);
-
-CREATE TABLE admin_view_order (
-    admin_id VARCHAR(255),
-    order_id VARCHAR(255),
-    PRIMARY KEY (admin_id, order_id)
 );
 
 CREATE TABLE info (
