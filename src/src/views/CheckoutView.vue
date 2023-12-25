@@ -1,7 +1,7 @@
 <template>
-  <div class=" overflow-x-hidden">
+  <div class="overflow-x-hidden">
     <BreadCrumbsVue class="h-60" />
-    <ShopStepsVue :step="1"/>
+    <ShopStepsVue :step="1" />
     <AddressCardVue :addressForm="addressForm" class="my-10" />
     <AddressFromVue
       class="pt-20 px-10"
@@ -12,7 +12,13 @@
       <button class="btn btn-primary mr-5" @click="$router.push('cart')">
         Back to cart
       </button>
-      <button class="btn btn-secondary" @click="removeAllFromCart();$router.push('order')">
+      <button
+        class="btn btn-secondary"
+        @click="
+          emptyCart();
+          $router.push('order');
+        "
+      >
         Place an order
       </button>
     </div>
@@ -20,35 +26,53 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapGetters } from "vuex";
 import CheckoutFromVue from "@/components/CheckoutComponents/CheckoutFrom.vue";
 import BreadCrumbsVue from "@/components/UnitComponents/BreadCrumbs.vue";
 import AddressFromVue from "@/components/AddressComponents/AddressFrom.vue";
 import AddressCardVue from "@/components/AddressComponents/AddressCard.vue";
-import ShopStepsVue from '@/components/UnitComponents/ShopSteps.vue';
+import ShopStepsVue from "@/components/UnitComponents/ShopSteps.vue";
+import http from "@/http";
 export default {
   components: {
     CheckoutFromVue,
     AddressFromVue,
     BreadCrumbsVue,
     AddressCardVue,
-    ShopStepsVue
+    ShopStepsVue,
   },
-  data(){
+  data() {
     return {
       addressForm: {
-      name: 'John Doe',
-      address: '123 Main Street',
-      city: 'New York',
-      country: 'usa',
-      email: 'johndoe@example.com',
-      phone: '123-456-7890'
-    }
-    }
+        name: "John Doe",
+        address: "123 Main Street",
+        city: "New York",
+        country: "usa",
+        email: "johndoe@example.com",
+        phone: "123-456-7890",
+      },
+    };
   },
-  methods:{
-    ...mapActions(['removeAllFromCart']),
-  }
+  computed: {
+    ...mapGetters(["getUserId"]),
+  },
+  methods: {
+    emptyCart() {
+      const buyerId = this.getUserId;
+      console.log(buyerId);
+      http
+        .get(`order.php?buyer_id=${buyerId}`)
+        .then((response) => {
+          console.log(response.data);
+          if (response.data.error) {
+            console.log(response.data.error);
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching cart items:", error);
+        });
+    },
+  },
 };
 </script>
 

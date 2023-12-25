@@ -58,7 +58,8 @@
                           v-for="(i, index) in product.type"
                           :key="index"
                           :class="{
-                            'border-2 text-primary': selectedType == i.goods_type_id,
+                            'border-2 text-primary':
+                              selectedType == i.goods_type_id,
                           }"
                         >
                           <input
@@ -69,7 +70,9 @@
                             aria-labelledby="type-choice-0-label"
                             v-model="selectedType"
                           />
-                          <span :id="i.goods_type_id">{{ i.goods_type_name }}</span>
+                          <span :id="i.goods_type_id">{{
+                            i.goods_type_name
+                          }}</span>
                           <span
                             class="pointer-events-none absolute -inset-px rounded-md"
                             aria-hidden="true"
@@ -97,9 +100,9 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import { mapActions } from 'vuex';
-
+import { mapGetters } from "vuex";
+import { mapActions } from "vuex";
+import http from "@/http.js"
 export default {
   props: ["product", "gid"],
   data() {
@@ -111,7 +114,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['isLoggedIn','isAdmin']),
+    ...mapGetters(["isLoggedIn", "isAdmin", "getUserId"]),
     idPriceMapping() {
       const mapping = {};
       this.types.forEach((type) => {
@@ -126,28 +129,40 @@ export default {
     this.idToPriceMap = this.idPriceMapping;
   },
   methods: {
-    ...mapActions(['addToCart']),
+    ...mapActions(["addToCart"]),
     decodeImg(image) {
       return `http://localhost/api/get_img.php?file=${image}`;
     },
     addProductToCart() {
-      if(!this.isLoggedIn){
+      if (!this.isLoggedIn) {
         this.$notify.info({
-          title: 'Have not Login?',
-          message: 'Login first!'
+          title: "Have not Login?",
+          message: "Login first!",
         });
-        return ;
+        return;
       }
-      this.addToCart({
-        name: this.product.name,
-        price: this.idToPriceMap[this.selectedType],
-        id: this.selectedType,
-        category: this.product.category,
-      });
-      this.$notify({
-          title: 'Success',
-          message: 'Added successfully',
-          type: 'success'
+      http
+        .get(
+          `/add_cart.php?goods_type_id=${this.selectedType}&buyer_id=${this.getUserId}`
+        )
+        .then((response) => {
+          // console.log(response.data); // 处理后端返回的响应数据
+          if (response.data.success) {
+            this.$notify({
+              title: "Success",
+              message: response.data.success,
+              type: "success",
+            });
+          } else {
+            this.$notify({
+              title: "error",
+              message: "Already in cart",
+              type: "error",
+            });
+          }
+        })
+        .catch((error) => {
+          console.error(error);
         });
     },
   },

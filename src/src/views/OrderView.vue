@@ -13,7 +13,9 @@
 <script>
 import BreadCrumbsVue from "@/components/UnitComponents/BreadCrumbs.vue";
 import ShopStepsVue from '@/components/UnitComponents/ShopSteps.vue';
+
 export default {
+
   components: {
     BreadCrumbsVue,
     ShopStepsVue

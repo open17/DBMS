@@ -22,6 +22,17 @@
           class="bg-gray-100 text-gray-900 border-0 rounded-md p-2 mb-4 focus:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
           placeholder="Type Password Again"
         />
+        <label for="admin" class="text-sm text-gray-900 cursor-pointer">
+          <input type="checkbox" id="admin" class="mr-2" v-model="is_admin" />
+          admin
+        </label>
+        <input
+          type="password"
+          v-model="admin_key"
+          class="bg-gray-100 text-gray-900 border-0 mt-5 rounded-md p-2 mb-4 focus:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
+          placeholder="Admin invite key"
+          v-if="is_admin"
+        />
         <div class="flex items-center justify-between flex-wrap">
           <p class="text-gray-900 mt-4">
             Already have an account?
@@ -56,6 +67,7 @@ export default {
       username: "", // 用户名
       password: "", // 密码
       confirmPassword: "", // 确认密码
+      is_admin: false,
     };
   },
   methods: {
@@ -108,7 +120,7 @@ export default {
           console.error(error);
         });
     },
-     tryLogin() {
+    tryLogin() {
       // 构建请求参数对象
       const postData = {
         username: this.username,
@@ -136,9 +148,9 @@ export default {
             // ... 完成登录后的逻辑
 
             // 更新用户 ID
-            this.$store.dispatch('updateUserId', response.data.userId);
-            this.$store.dispatch('updateLoggedIn', true);
-            this.$router.push('/');
+            this.$store.dispatch("updateUserId", response.data.userId);
+            this.$store.dispatch("updateLoggedIn", true);
+            this.$router.push("/");
           } else {
             // 登录失败
             this.$notify({

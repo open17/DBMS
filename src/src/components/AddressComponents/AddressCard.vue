@@ -5,34 +5,57 @@
         <el-button type="primary" size="small" @click="$store.commit('toggleAddressEditor')">Edit</el-button>
       </template>
 
-      <el-descriptions-item label="Full Name">{{
-        addressForm.name
+      <el-descriptions-item label="Post">{{
+        info.post
       }}</el-descriptions-item>
       <el-descriptions-item label="Street">{{
-        addressForm.address
+        info.street
       }}</el-descriptions-item>
       <el-descriptions-item label="City">{{
-        addressForm.city
+        info.city
       }}</el-descriptions-item>
       <el-descriptions-item label="Country">{{
-        addressForm.country
+        info.country
       }}</el-descriptions-item>
       <el-descriptions-item label="Email">
-        {{ addressForm.email }}
+        {{ info.email }}
       </el-descriptions-item>
       <el-descriptions-item label="Phone">{{
-        addressForm.phone
+        info.phone
       }}</el-descriptions-item>
     </el-descriptions>
   </div>
 </template>
 
 <script>
+import http from '@/http';
+import { mapGetters } from "vuex";
 export default {
-  props: {
-    addressForm: {
-      type: Object,
-      required: true,
+  data() {
+    return {
+      info: {},
+    };
+  },
+   computed: {
+    ...mapGetters(["getUserId"]),
+  },
+  mounted() {
+    this.fetchInfo();
+  },
+  methods: {
+    fetchInfo() {
+      http.get(`get_info.php?buyer_id=${this.getUserId}`)
+        .then((response) => {
+          const data = response.data;
+          if (data.error) {
+            console.error(data.error);
+          } else {
+            this.info = data;
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     },
   },
 };
