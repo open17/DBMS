@@ -68,6 +68,7 @@ export default {
       password: "", // 密码
       confirmPassword: "", // 确认密码
       is_admin: false,
+      admin_key:""
     };
   },
   methods: {
@@ -81,17 +82,26 @@ export default {
         });
         return;
       }
-
+      if (this.is_admin && this.admin_key !== "open17") {
+        this.$notify({
+          title: "Warning",
+          message: "Invite key error",
+          type: "warning",
+        });
+        return;
+      }
       // 构建请求参数对象
       const postData = {
         buyer_name: this.username,
         password: this.password,
+        is_admin: this.is_admin,
       };
       const config = {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
       };
+      console.log(postData);
       // 发送 POST 请求
       http
         .post("signup.php", postData, config)
@@ -125,14 +135,14 @@ export default {
       const postData = {
         username: this.username,
         password: this.password,
-        is_admin: false,
+        is_admin: this.is_admin,
       };
       const config = {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
       };
-      console.log(postData);
+      // console.log(postData);
       // 发送登录请求
       http
         .post("login.php", postData, config)
@@ -150,6 +160,7 @@ export default {
             // 更新用户 ID
             this.$store.dispatch("updateUserId", response.data.userId);
             this.$store.dispatch("updateLoggedIn", true);
+            this.$store.dispatch('updateAdmin', this.is_admin);
             this.$router.push("/");
           } else {
             // 登录失败

@@ -101,6 +101,7 @@ export default {
             // 更新用户 ID
             this.$store.dispatch('updateUserId', response.data.userId);
             this.$store.dispatch('updateLoggedIn', true);
+            this.$store.dispatch('updateAdmin', this.is_admin);
             this.$router.push('/');
           } else {
             // 登录失败
