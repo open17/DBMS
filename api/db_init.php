@@ -64,12 +64,6 @@ CREATE TABLE orders (
     cart_id VARCHAR(255)
 );
 
-CREATE TABLE admin_view_order (
-    admin_id VARCHAR(255),
-    order_id VARCHAR(255),
-    PRIMARY KEY (admin_id, order_id)
-);
-
 CREATE TABLE info (
     buyer_id VARCHAR(255) PRIMARY KEY,
     post VARCHAR(255),
@@ -120,10 +114,6 @@ ADD FOREIGN KEY (buyer_id) REFERENCES buyer(buyer_id);
 ALTER TABLE orders
 ADD FOREIGN KEY (cart_id) REFERENCES cart(cart_id);
 
-ALTER TABLE admin_view_order
-ADD FOREIGN KEY (admin_id) REFERENCES admin(admin_id),
-ADD FOREIGN KEY (order_id) REFERENCES orders(order_id);
-
 ALTER TABLE info
 ADD FOREIGN KEY (buyer_id) REFERENCES buyer(buyer_id);
 
@@ -157,9 +147,6 @@ VALUES (1, 'hashedpassword');
 INSERT INTO orders (order_id, order_date, payment, cart_id)
 VALUES (1, '2023-12-24', 'Credit Card', 1);
 
-
-INSERT INTO admin_view_order (admin_id, order_id)
-VALUES (1, 1);
 
 
 INSERT INTO info (buyer_id, post, street, city, country, email, phone)
@@ -261,20 +248,20 @@ if ($conn->multi_query($addForeignKeyQuery) === TRUE) {
 $conn->query("SET FOREIGN_KEY_CHECKS=0");
 
 
-if ($conn->multi_query($insertDataQuery) === TRUE) {
-    // 处理每个查询的结果集
-    do {
-        // 获取当前查询的结果集
-        if ($result = $conn->store_result()) {
-            // 释放结果集
-            $result->free();
-        }
-        // 移到下一个结果集
-    } while ($conn->next_result());
-    echo "基本数据添加成功<br>";
-} else {
-    echo "基本数据添加失败: " . $conn->error;
-}
+// if ($conn->multi_query($insertDataQuery) === TRUE) {
+//     // 处理每个查询的结果集
+//     do {
+//         // 获取当前查询的结果集
+//         if ($result = $conn->store_result()) {
+//             // 释放结果集
+//             $result->free();
+//         }
+//         // 移到下一个结果集
+//     } while ($conn->next_result());
+//     echo "基本数据添加成功<br>";
+// } else {
+//     echo "基本数据添加失败: " . $conn->error;
+// }
 
 if ($conn->multi_query($triggerQuery) === TRUE) {
     // 处理每个查询的结果集
@@ -296,57 +283,6 @@ if ($conn->multi_query($triggerQuery) === TRUE) {
 
 // 打开外键约束检查
 $conn->query("SET FOREIGN_KEY_CHECKS=1");
-
-$imageUrls = [
-    'huawei.jpg',
-    'iphone.png',
-];
-$imageInfoUrls=[
-    'huawei_info.jpg',
-    'iphone_info.jpg',
-];
-
-// 循环插入数据到 goods 表
-for ($i = 2; $i <= 10; $i++) {
-    // 生成随机类别索引
-    $randomIndex=rand(0,1);
-    $randomText = generateRandomText();
-    // 构造插入语句并执行
-    $sql = "INSERT INTO goods (goods_id, goods_name, goods_description, goods_pic, goods_information_pic)
-            VALUES ('$i', 'Product$i', '$randomText', '$imageUrls[$randomIndex]', '$imageInfoUrls[$randomIndex]')";
-    $conn->query($sql);
-    // 循环生成数据并插入到表中
-    for ($j = 1; $j <= 10; $j++) {
-        $typeName = 'Type ' . ($j + 1);
-        $price = rand(100, 999) . '.' . rand(0, 99);
-        $timestamp = time();  // 获取当前的时间戳
-        $uuid = uniqid();  // 生成UUID
-        $id = $timestamp. "" .$uuid;
-        // echo($id . '<br>');
-        // 构造插入语句
-        $sql = "INSERT INTO goods_type (goods_type_id, goods_id, goods_type_name, price)
-                VALUES ('$id', '$i', '$typeName', $price)";
-        // 执行插入操作
-        $conn->query($sql);
-    }
-}
-
-function generateRandomText() {
-    $words = ['Lorem', 'ipsum', 'dolor', 'sit', 'amet', 'consectetur', 'adipiscing', 'elit',
-    'sed', 'do', 'eiusmod', 'tempor', 'incididunt', 'ut', 'labore', 'et', 'dolore','huawei',
-    'magna', 'aliqua', 'Ut', 'enim', 'ad', 'minim', 'veniam', 'quis', 'nostrud','phone', 'pad', 'like', 'robot', 'amet', 'consectetur', 'adipiscing', 'elit'];
-    $randomText = '';
-
-    $numWords = rand(2, 5); // 随机生成文字的数量
-
-    for ($i = 0; $i < $numWords; $i++) {
-        $randomIndex = array_rand($words);
-        $randomText .= $words[$randomIndex] . ' ';
-    }
-
-    return trim($randomText);
-}
-
 
 
 
