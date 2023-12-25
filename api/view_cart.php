@@ -1,7 +1,7 @@
 <?php
-    // 设置响应头为 JSON 类型
-    header('Content-Type: application/json');
-    header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Origin: *');
+header("Access-Control-Allow-Methods: *");
+header("Access-Control-Allow-Headers: *");
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     // 获取 GET 请求参数
     $buyer_id = $_GET['buyer_id'];
@@ -42,19 +42,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $stmt->close();
 
     // 查询商品信息和购物车总价
-    $query = "SELECT goods_type_name, price FROM goods_type WHERE goods_type_id = ?";
+    $query = "SELECT goods_type.goods_type_id, goods.goods_name, goods_type.goods_type_name, goods_type.price FROM goods_type INNER JOIN goods ON goods_type.goods_id = goods.goods_id WHERE goods_type.goods_type_id = ?";
     $total_price = 0;
     $cart_items = array();
     $stmt = $conn->prepare($query);
     $stmt->bind_param('s', $goods_type_id);
     foreach ($goods as $goods_type_id) {
         $stmt->execute();
-        $stmt->bind_result($goods_type_name, $price);
+        $stmt->bind_result($goods_type_id, $goods_name, $goods_type_name, $price);
         $stmt->fetch();
- 
 
         $cart_items[] = array(
             'goods_type_id' => $goods_type_id,
+            'goods_name' => $goods_name,
             'goods_type_name' => $goods_type_name,
             'price' => $price
         );
