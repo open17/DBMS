@@ -10,11 +10,11 @@ header('Access-Control-Allow-Origin: *');
 $goodsId = isset($_GET['gid']) ? $_GET['gid'] : '1';
 
 // 查询商品详情
-$goodsSql = "SELECT goods_description, goods_information_pic,goods_pic, goods_name FROM goods WHERE goods_id = $goodsId";
+$goodsSql = "SELECT goods_description, goods_information_pic,goods_pic, goods_name FROM goods WHERE goods_id = '$goodsId' ";
 $goodsResult = $conn->query($goodsSql);
 
 // 查询商品类型信息
-$typeSql = "SELECT goods_type_name,price,goods_type_id FROM goods_type WHERE goods_id = $goodsId";
+$typeSql = "SELECT goods_type_name,price,goods_type_id FROM goods_type WHERE goods_id = '$goodsId' ";
 $typeResult = $conn->query($typeSql);
 
 // 构造返回的 JSON 数据

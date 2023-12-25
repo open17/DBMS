@@ -91,6 +91,14 @@ const routes = [
       },
     component: () => import(/* webpackChunkName: "about" */ '../views/SignupView.vue')
   },
+  {
+    path: '/admin',
+    name: 'admin',
+    meta: {
+        breadcrumb: 'Admin'
+      },
+    component: () => import(/* webpackChunkName: "about" */ '../views/AdminView.vue')
+  },
 ]
 
 const router = new VueRouter({
