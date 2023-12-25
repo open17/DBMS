@@ -151,13 +151,10 @@ ADD FOREIGN KEY (goods_type_id) REFERENCES goods_type(goods_type_id);
 ```
 
 ### trigger约束
-- 添加商品时的价格范围约束
-```sql
-
-```
 
 - order形成时清空cart_contain_goods_type中对应cart_id的商品,同时清空cart的total_price
 ```sql
+DELIMITER |
 CREATE TRIGGER clear_cart_and_goods
 AFTER INSERT ON orders
 FOR EACH ROW
@@ -168,10 +165,12 @@ BEGIN
     UPDATE cart
     SET total_price = 0
     WHERE cart_id = NEW.cart_id;
-END;
+END |
+DELIMITER ;
 ```
 - 添加cart_contain_goods_type时增加对应的cart中的total_price
 ```sql
+DELIMITER |
 CREATE TRIGGER update_cart_total_price
 AFTER INSERT ON cart_contain_goods_type
 FOR EACH ROW
@@ -184,7 +183,27 @@ BEGIN
     UPDATE cart
     SET total_price = total_price + goods_price
     WHERE cart_id = NEW.cart_id;
-END;
+END |
+DELIMITER ;
+```
+
+- 删除cart_contain_goods_type时减去对应的cart中的total_price
+```sql
+DELIMITER |
+CREATE TRIGGER delete_cart_total_price
+AFTER DELETE ON cart_contain_goods_type
+FOR EACH ROW
+BEGIN
+    DECLARE goods_price DECIMAL(10, 2);
+    SELECT price INTO goods_price
+    FROM goods_type
+    WHERE goods_type_id = OLD.goods_type_id;
+    
+    UPDATE cart
+    SET total_price = total_price - goods_price
+    WHERE cart_id = OLD.cart_id;
+END |
+DELIMITER ;
 ```
 
 
