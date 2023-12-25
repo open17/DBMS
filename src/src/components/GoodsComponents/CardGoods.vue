@@ -10,20 +10,6 @@
       </h2>
       <p>{{ description }}</p>
       <div class="card-actions justify-between">
-        <div class="rating">
-          <input type="radio" class="mask mask-star-2 bg-orange-400" disabled v-for="i of rating-1" :key="i"/>
-          <input type="radio" class="mask mask-star-2 bg-orange-400" checked />
-          <input type="radio" class="mask mask-star-2 bg-orange-400" disabled  v-for="i of 5-rating" :key="i"/>
-        </div>
-        <div class="flex gap-2" v-if="tags">
-          <div
-            class="badge badge-outline"
-            v-for="(i, index) in tags"
-            :key="index"
-          >
-            {{ i }}
-          </div>
-        </div>
       </div>
     </div>
   </div>

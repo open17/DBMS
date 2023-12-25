@@ -12,13 +12,14 @@
         />
         <input
           type="password"
+          v-model="password"
           class="bg-gray-100 text-gray-900 border-0 rounded-md p-2 mb-4 focus:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
           placeholder="Password"
         />
         <div class="flex items-center justify-between flex-wrap">
-          <label for="remember-me" class="text-sm text-gray-900 cursor-pointer">
-            <input type="checkbox" id="remember-me" class="mr-2" />
-            Remember me
+          <label for="admin" class="text-sm text-gray-900 cursor-pointer">
+            <input type="checkbox" id="admin" class="mr-2"  v-model="is_admin"/>
+            admin
           </label>
           <a href="#" class="text-sm text-blue-500 hover:underline mb-0.5"
             >Forgot password?</a
@@ -43,6 +44,7 @@
 
 <script>
 import BreadCrumbsVue from "@/components/UnitComponents/BreadCrumbs.vue";
+import http from "@/http.js";
 import { mapGetters, mapActions } from 'vuex';
 export default {
     components:{
@@ -52,6 +54,7 @@ export default {
     return {
       username: '',
       password: '',
+      is_admin:false
     };
   },
   computed: {
@@ -69,10 +72,50 @@ export default {
         this.updateAdmin(true);
     },
     tryLogin() {
-        if(this.username === 'seller')this.loginAdmin();
-        this.login();
-        this.$router.push('/');
-    }
+      // 构建请求参数对象
+      const postData = {
+        username: this.username,
+        password: this.password,
+        is_admin: this.is_admin,
+      };
+      const config = {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      };
+      console.log(postData);
+      // 发送登录请求
+      http
+        .post("login.php", postData, config)
+        .then((response) => {
+          if (response.data.success) {
+            // 登录成功
+            // 完成登录后的逻辑
+            this.$notify({
+              title: "Success",
+              message: "Login successful",
+              type: "success",
+            });
+            // ... 完成登录后的逻辑
+
+            // 更新用户 ID
+            this.$store.dispatch('updateUserId', response.data.userId);
+            this.$store.dispatch('updateLoggedIn', true);
+            this.$router.push('/');
+          } else {
+            // 登录失败
+            this.$notify({
+              title: "Error",
+              message: response.data.error,
+              type: "error",
+            });
+          }
+        })
+        .catch((error) => {
+          // 登录失败，处理错误信息
+          console.error(error);
+        });
+    },
   },
 };
 </script>

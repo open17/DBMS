@@ -7,8 +7,9 @@
         background
         layout="prev, pager, next"
         :total="totalCount"
+        :page-size="limit"
         :current-page="currentPage"
-        :hide-on-single-page="true"
+        :hide-on-single-page="false"
         @current-change="handlePageChange"
       ></el-pagination>
     </div>
@@ -30,7 +31,6 @@ export default {
   },
   data() {
     return {
-      category: "All",
       keyword: "",
       responseData: [],
       query: null,
@@ -42,19 +42,17 @@ export default {
   },
   methods: {
     fetchData() {
-      if (this.$route.query.category)
-        this.category = this.$route.query.category;
       if (this.$route.query.keyword) this.keyword = this.$route.query.keyword;
       http
         .get(
-          `db_goods.php?category=${this.category}&keyword=${this.keyword}&page=${this.currentPage}&limit=${this.limit}`
+          `db_goods.php?keyword=${this.keyword}&page=${this.currentPage}&limit=${this.limit}`
         )
         .then((response) => {
           // 响应成功
           this.responseData = response.data.data;
+          // console.log(this.responseData);
           this.currentPage = Number(response.data.page);
           this.totalCount =  Number(response.data.totalCount);
-          this.totalPages = Math.ceil(this.totalCount / this.limit);
         })
         .catch((error) => {
           // 响应出错

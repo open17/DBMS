@@ -58,18 +58,18 @@
                           v-for="(i, index) in product.type"
                           :key="index"
                           :class="{
-                            'border-2 text-primary': selectedType == i.type_id,
+                            'border-2 text-primary': selectedType == i.goods_type_id,
                           }"
                         >
                           <input
                             type="radio"
                             name="type-choice"
-                            :value="i.type_id"
+                            :value="i.goods_type_id"
                             class="sr-only"
                             aria-labelledby="type-choice-0-label"
                             v-model="selectedType"
                           />
-                          <span :id="i.type_id">{{ i.type_name }}</span>
+                          <span :id="i.goods_type_id">{{ i.goods_type_name }}</span>
                           <span
                             class="pointer-events-none absolute -inset-px rounded-md"
                             aria-hidden="true"
@@ -115,23 +115,20 @@ export default {
     idPriceMapping() {
       const mapping = {};
       this.types.forEach((type) => {
-        mapping[type.type_id] = parseFloat(type.price);
+        mapping[type.goods_type_id] = parseFloat(type.price);
       });
       return mapping;
     },
   },
   mounted() {
     this.types = this.product.type;
-    this.selectedType = this.types[0].type_id;
+    this.selectedType = this.types[0].goods_type_id;
     this.idToPriceMap = this.idPriceMapping;
   },
   methods: {
     ...mapActions(['addToCart']),
-    getReviewLink() {
-      return `review?gid=${this.gid}`;
-    },
     decodeImg(image) {
-      return `data:image/jpeg;base64,${image}`;
+      return `http://localhost/api/get_img.php?file=${image}`;
     },
     addProductToCart() {
       if(!this.isLoggedIn){

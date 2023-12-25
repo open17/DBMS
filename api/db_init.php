@@ -182,6 +182,48 @@ INSERT INTO cart (cart_id, total_price)
 VALUES (1, 10.99);
 ";
 
+$triggerQuery = "
+CREATE TRIGGER clear_cart_and_goods
+AFTER INSERT ON orders
+FOR EACH ROW
+BEGIN
+    DELETE FROM cart_contain_goods_type
+    WHERE cart_id = NEW.cart_id;
+    
+    UPDATE cart
+    SET total_price = 0
+    WHERE cart_id = NEW.cart_id;
+END ;
+
+CREATE TRIGGER update_cart_total_price
+AFTER INSERT ON cart_contain_goods_type
+FOR EACH ROW
+BEGIN
+    DECLARE goods_price DECIMAL(10, 2);
+    SELECT price INTO goods_price
+    FROM goods_type
+    WHERE goods_type_id = NEW.goods_type_id;
+    
+    UPDATE cart
+    SET total_price = total_price + goods_price
+    WHERE cart_id = NEW.cart_id;
+END ;
+
+CREATE TRIGGER delete_cart_total_price
+AFTER DELETE ON cart_contain_goods_type
+FOR EACH ROW
+BEGIN
+    DECLARE goods_price DECIMAL(10, 2);
+    SELECT price INTO goods_price
+    FROM goods_type
+    WHERE goods_type_id = OLD.goods_type_id;
+    
+    UPDATE cart
+    SET total_price = total_price - goods_price
+    WHERE cart_id = OLD.cart_id;
+END ;
+";
+
 
 // 执行创建表格的SQL语句
 if ($conn->multi_query($createTableQuery) === TRUE) {
@@ -234,13 +276,29 @@ if ($conn->multi_query($insertDataQuery) === TRUE) {
     echo "基本数据添加失败: " . $conn->error;
 }
 
+if ($conn->multi_query($triggerQuery) === TRUE) {
+    // 处理每个查询的结果集
+    do {
+        // 获取当前查询的结果集
+        if ($result = $conn->store_result()) {
+            // 释放结果集
+            $result->free();
+        }
+        // 移到下一个结果集
+    } while ($conn->next_result());
+    echo "trigger添加成功<br>";
+} else {
+    echo "trigger添加失败: " . $conn->error;
+}
+
+
 
 
 // 打开外键约束检查
 $conn->query("SET FOREIGN_KEY_CHECKS=1");
 
 $imageUrls = [
-    'huawei_info.jpg',
+    'huawei.jpg',
     'iphone.png',
 ];
 $imageInfoUrls=[

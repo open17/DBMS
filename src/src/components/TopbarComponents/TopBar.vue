@@ -10,16 +10,7 @@
           <router-link to="/" class="mr-2">Home</router-link>
         </li>
         <li>
-          <details>
-            <summary>Shop</summary>
-            <ul class="p-2 bg-base-100 rounded-t-none z-30">
-              <li v-for="(value, key) in navData" :key="key" class="mr-2">
-                <router-link :to="value">
-                  {{ key }}
-                </router-link>
-              </li>
-            </ul>
-          </details>
+          <router-link to="/goods" class="mr-2">Shop</router-link>
         </li>
         <li>
           <details>
@@ -113,13 +104,6 @@ export default {
   },
   data() {
     return {
-      navData: {
-        All: "/goods?category=All",
-        Phone: "/goods?category=Phone",
-        Computer: "/goods?category=Computer",
-        Audiovisual: "/goods?category=Audiovisual",
-        Others: "/goods?category=Others",
-      },
     };
   },
   methods: {

@@ -1,25 +1,11 @@
 <template>
-  <div class="bg-base-200 flex flex-col">
-    <review-card-vue
-      v-for="(i, index) in responseData"
-      :key="index"
-      :cardTitle="i.cardTitle"
-      :authorName="i.authorName"
-      :avatarSrc="i.avatarSrc"
-      :cardText="i.cardText"
-      :date="i.date"
-      :rating="i.rating"
-    />
-  </div>
+  <div class="bg-base-200 flex flex-col">{{ responseData }}</div>
 </template>
 
 <script>
-import ReviewCardVue from "@/components/ReviewComponents/ReviewCard.vue";
-import http from "@/http.js";
+import axios from 'axios';
+
 export default {
-  components: {
-    ReviewCardVue,
-  },
   data() {
     return {
       gid: 0,
@@ -28,20 +14,25 @@ export default {
   },
   methods: {
     fetchData() {
-      http
-        .get("reviews.php?gid=" + this.gid)
-        .then((response) => {
-          // 响应成功
-          this.responseData = response.data;
-        })
-        .catch((error) => {
-          // 响应出错
-          console.error(error);
-        });
+      axios({
+        method: 'POST',
+        url: 'http://localhost/api/test_post.php',
+        data: {
+          id: 1,
+          name: "张三"
+        },
+        
+      })
+      .then(response => {
+        console.log(response.data);
+        this.responseData = response.data; // 将响应数据赋值给 responseData
+      })
+      .catch(error => {
+        console.log('错误', error.message);
+      });
     },
   },
   mounted() {
-    if (this.$route.query.gid) this.gid = this.$route.query.gid;
     this.fetchData();
   },
 };

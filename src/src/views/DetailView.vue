@@ -3,10 +3,6 @@
     <template v-if="dataFetched">
       <ProductViewVue :product="responseData" :gid="gid" />
       <InformationTabVue :description="getDescription()" :information="getInformation()" />
-      <h2 class="m-2 text-2xl font-bold tracking-tight text-gray-900">
-        Customers also purchased
-      </h2>
-      <CarouselSectionVue class="bg-base-200" />
       <div class="bg-base-200 h-20"></div>
     </template>
   </div>
@@ -14,14 +10,14 @@
 
 <script>
 import ProductViewVue from "@/components/DetailComponents/ProductView.vue";
-import CarouselSectionVue from "@/components/HeroComponents/CarouselSection.vue";
+// import CarouselSectionVue from "@/components/HeroComponents/CarouselSection.vue";
 import http from "@/http.js";
 import InformationTabVue from '@/components/DetailComponents/InformationTab.vue';
 
 export default {
   components: {
     ProductViewVue,
-    CarouselSectionVue,
+    // CarouselSectionVue,
     InformationTabVue
   },
   data() {

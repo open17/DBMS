@@ -10,6 +10,7 @@ export default new Vuex.Store({
     loggedIn: false,
     isAdmin: false,
     cart: [],
+    userId: null,
   },
   getters: {
     getAddress: state => state.address,
@@ -17,6 +18,7 @@ export default new Vuex.Store({
     isLoggedIn: state => state.loggedIn,
     isAdmin: state => state.isAdmin,
     getCart: state => state.cart,
+    getUserId: state => state.userId,
   },
   mutations: {
     setAddress(state, address) {
@@ -30,6 +32,12 @@ export default new Vuex.Store({
     },
     setAdmin(state, isAdmin) {
       state.isAdmin = isAdmin;
+    },
+    setUserId(state, userId) {
+      state.userId = userId;
+    },
+    clearUserId(state) {
+      state.userId = null;
     },
     addToCart(state, product) {
       state.cart.push(product);
@@ -53,6 +61,13 @@ export default new Vuex.Store({
     },
     updateAdmin({ commit }, isAdmin) {
       commit('setAdmin', isAdmin);
+    },
+    updateUserId({ commit }, userId) {
+      commit('setUserId', userId);
+    },
+    logout({ commit }) {
+      commit('setLoggedIn', false);
+      commit('clearUserId');
     },
     addToCart({ commit }, product) {
       commit('addToCart', product);

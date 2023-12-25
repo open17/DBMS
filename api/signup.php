@@ -1,12 +1,11 @@
 <?php
-    // 设置响应头为 JSON 类型
-    header('Content-Type: application/json');
-    header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Origin: *');
+header("Access-Control-Allow-Methods: *");
+header("Access-Control-Allow-Headers: *");
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // 获取 POST 请求参数
     $buyer_name = $_POST['buyer_name'];
     $password = $_POST['password'];
-
     // 验证参数是否为空
     if (empty($buyer_name) || empty($password)) {
         // 参数不完整，返回错误信息
@@ -59,6 +58,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->execute();
     $stmt->close();
 
+    // 生成唯一的 cart_id
+    $cart_id = generateUniqueCartId();
+
+    // 创建购物车记录
+    $query = "INSERT INTO cart (cart_id, total_price) VALUES (?, 0)";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param('s', $cart_id);
+    $stmt->execute();
+    $stmt->close();
+
+    // 更新 buyer 表的 cart_id
+    $query = "UPDATE buyer SET cart_id = ? WHERE buyer_id = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param('ss', $cart_id, $buyer_id);
+    $stmt->execute();
+    $stmt->close();
+
     // 注册成功，返回成功信息
     header('Content-Type: application/json');
     echo json_encode(array('success' => 'Registration successful'));
@@ -88,4 +104,13 @@ function generateSalt()
         $salt .= $characters[rand(0, strlen($characters) - 1)];
     }
     return $salt;
+}
+
+
+function generateUniqueCartId()
+{
+    $timestamp = time();  // 获取当前的时间戳
+    $uuid = uniqid();  // 生成UUID
+    $id = $timestamp. "" .$uuid;
+    return $id;
 }

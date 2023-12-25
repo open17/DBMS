@@ -15,16 +15,6 @@
             ></path>
           </svg>
         </div>
-        <select
-          class="select flex max-w-xs border-none active:border-none bg-base-100 border-0 rounded-none"
-          ref="selectMenu"
-        >
-          <option selected>All</option>
-          <option>Phone</option>
-          <option>Computer</option>
-          <option>Audiovisual</option>
-          <option>Others</option>
-        </select>
         <input
           type="text"
           class="h-12 w-96 bg-base-100 pl-4 text-base font-semibold outline-0"
@@ -52,12 +42,10 @@ export default {
   },
   methods: {
     submitForm() {
-      const selectedOption = this.$refs.selectMenu.value;
       const inputText = this.inputText;
       const query = { ...this.$route.query };
       // 修改查询参数的值
-      if (query.category != selectedOption || query.keyword != inputText) {
-        query.category = selectedOption;
+      if (query.keyword != inputText) {
         query.keyword = inputText;
         // 使用新的查询参数进行路由跳转
         this.$router.push({ query });

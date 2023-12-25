@@ -1,14 +1,12 @@
 <?php
-    // 设置响应头为 JSON 类型
-    header('Content-Type: application/json');
-    header('Access-Control-Allow-Origin: *');
-
+header('Access-Control-Allow-Origin: *');
+header("Access-Control-Allow-Methods: *");
+header("Access-Control-Allow-Headers: *");
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // 获取 POST 请求参数
     $username = $_POST['username'];
     $password = $_POST['password'];
     $is_admin = $_POST['is_admin'];
-
     // 验证参数是否为空
     if (empty($username) || empty($password) || empty($is_admin)) {
         // 参数不完整，返回错误信息
@@ -43,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // 查询用户信息
     $query = "SELECT $id_column, $salt_column FROM $table WHERE $name_column = ?";
     $stmt = $conn->prepare($query);
-    $stmt->bind_param('s', $username);
+    $stmt->bind_param('s', $_POST['username']);
     $stmt->execute();
     $stmt->store_result();
 
@@ -51,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($stmt->num_rows === 0) {
         // 用户不存在，返回错误信息
         header('Content-Type: application/json');
-        echo json_encode(array('error' => 'Invalid username'));
+        echo json_encode(array('error' => $_POST['username'].' not exits'));
         exit;
     }
 
@@ -82,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // 验证通过，返回成功信息
     header('Content-Type: application/json');
-    echo json_encode(array('success' => 'Login successful'));
+    echo json_encode(array('success' => 'Login successful', 'userId' => $id));
 } else {
     // 请求方法不正确，返回错误信息
     header('Content-Type: application/json');
